@@ -11,12 +11,13 @@ import {
 } from './util/compat'
 import type { Component } from 'types/component'
 import type { GlobalAPI } from 'types/global-api'
-
+import { log } from '../../core/util/debug'
 const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
-
+// $mount主要实现了 vue 渲染过程中很重要的一步，得到 render 函数。
+// 如果我们使用的 template 进行编写HTML代码，vue 内部会把模板编译成 vue 可识别的 render 函数，如果有写 render 则可以省去编译过程。（ 直接写 render 函数对 vue 编译效率会更好 ）
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -34,6 +35,7 @@ Vue.prototype.$mount = function (
   }
 
   const options = this.$options
+  log("#FF8F00","$mount options",options)
   // resolve template/el and convert to render function
   /**
  * 编译权重：
@@ -67,12 +69,13 @@ Vue.prototype.$mount = function (
       // @ts-expect-error
       template = getOuterHTML(el)
     }
+    log("#FF8F00","$mount template:",template)
     if (template) {
       /* istanbul ignore if */
       if (__DEV__ && config.performance && mark) {
         mark('compile')
       }
-
+      
       const { render, staticRenderFns } = compileToFunctions(
         template,
         {

@@ -15,11 +15,14 @@ import {
   isServerRendering,
   hasChanged
 } from '../util/index'
+import { log } from '../util/debug'
 import { isReadonly, isRef, TrackOpTypes, TriggerOpTypes } from '../../v3'
 
 const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 
 const NO_INIITIAL_VALUE = {}
+
+
 
 /**
  * In some cases we may want to disable observation inside a component's
@@ -48,6 +51,7 @@ export class Observer {
     // this.value = value
     //创建依赖收集的容器
     this.dep = new Dep()
+    log("#BA68C8","observer this.dep:",this.dep)
     this.vmCount = 0
     //设置一个__ob__属性引用当前observer实例
     def(value, '__ob__', this)
@@ -73,6 +77,7 @@ export class Observer {
    * Walk through all properties and convert them into
    * getter/setters. This method should only be called when
    * value type is Object.
+   * * 遍历所有属性并将它们转换为getter/setter。仅当值类型为 Object 时才应调用此方法。
    */
   walk(obj: object, shallow: boolean) {
     const keys = Object.keys(obj)
@@ -97,6 +102,7 @@ export class Observer {
 /**
  * Augment a target Object or Array by intercepting
  * the prototype chain using __proto__
+ * 通过使用 __proto__ 拦截原型链来扩充目标对象或数组
  */
 function protoAugment(target, src: Object) {
   /* eslint-disable no-proto */
@@ -107,6 +113,7 @@ function protoAugment(target, src: Object) {
 /**
  * Augment a target Object or Array by defining
  * hidden properties.
+ * 通过定义隐藏属性来增强目标对象或数组。
  */
 /* istanbul ignore next */
 function copyAugment(target: Object, src: Object, keys: Array<string>) {
@@ -122,7 +129,7 @@ function copyAugment(target: Object, src: Object, keys: Array<string>) {
  * or the existing observer if the value already has one.* 如果值已经有一个，则返回现有观察者。
  */
 export function observe(value: any, shallow?: boolean): Observer | void {
-  console.log("observer params value:",value)
+  log("#BA68C8","observer params value:",value)
   if (!isObject(value) || isRef(value) || value instanceof VNode) {
     return
   }
@@ -143,6 +150,7 @@ export function observe(value: any, shallow?: boolean): Observer | void {
 
 /**
  * Define a reactive property on an Object.
+ * 在一个对象上定义一个反应属性。
  */
 export function defineReactive(
   obj: object,
@@ -172,15 +180,16 @@ export function defineReactive(
   console.log("defineReactive val:",{key:key,val})
   //childOb,属性拦截，只要是对象类型都会返回childobj
   let childOb = !shallow && observe(val)
+  log("#BA68C8","defineReactive childOb:",childOb)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter() {
-      console.log("defineReactive defineProperty get:",{key:key,val},dep)
+      log("#BA68C8","defineReactive defineProperty get:",{key:key,val},dep)
       const value = getter ? getter.call(obj) : val
       //如果存在依赖
       if (Dep.target) {
-        //依赖收集
+        //依赖收集(__DEV__开发模式 一般不看)
         if (__DEV__) {
           dep.depend({
             target: obj,

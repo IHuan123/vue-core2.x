@@ -10,14 +10,13 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 import type { Component } from 'types/component'
 import type { InternalComponentOptions } from 'types/options'
 import { EffectScope } from 'v3/reactivity/effectScope'
-
+import { log } from '../util/debug'
 let uid = 0
 
 export function initMixin(Vue: typeof Component) {
   //在initMinxin里面定义Vue的原型方法_init
   Vue.prototype._init = function (options?: Record<string, any>) {
     const vm: Component = this
-    console.log("initMixin",vm)
     // a uid
     vm._uid = uid++
 
@@ -74,6 +73,7 @@ export function initMixin(Vue: typeof Component) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
+    log("#FF5722","initMixin vm:",vm,vm.$options)
     //最终挂载方法
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)

@@ -38,8 +38,8 @@ if (__DEV__) {
       isFunction(vm) && (vm as any).cid != null
         ? (vm as any).options
         : vm._isVue
-        ? vm.$options || (vm.constructor as any).options
-        : vm
+          ? vm.$options || (vm.constructor as any).options
+          : vm
     let name = options.name || options._componentTag
     const file = options.__file
     if (!name && file) {
@@ -87,12 +87,10 @@ if (__DEV__) {
         tree
           .map(
             (vm, i) =>
-              `${i === 0 ? '---> ' : repeat(' ', 5 + i * 2)}${
-                isArray(vm)
-                  ? `${formatComponentName(vm[0])}... (${
-                      vm[1]
-                    } recursive calls)`
-                  : formatComponentName(vm)
+              `${i === 0 ? '---> ' : repeat(' ', 5 + i * 2)}${isArray(vm)
+                ? `${formatComponentName(vm[0])}... (${vm[1]
+                } recursive calls)`
+                : formatComponentName(vm)
               }`
           )
           .join('\n')
@@ -101,4 +99,14 @@ if (__DEV__) {
       return `\n\n(found in ${formatComponentName(vm!)})`
     }
   }
+}
+export function log(color: string = "#78909C", msg?: string, ...args: any[]) {
+  if (__DEV__) {
+    if (msg) {
+      console.log(`%c${msg}`, `color:#ffffff;background:${color};padding:2px;border-radius:2px`, ...args)
+    } else if (args.length > 0) {
+      console.log(...args)
+    }
+  }
+
 }

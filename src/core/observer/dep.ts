@@ -1,5 +1,6 @@
 import { remove } from '../util/index'
 import config from '../config'
+import { log } from '../util/debug'
 import { DebuggerOptions, DebuggerEventExtraInfo } from 'v3'
 
 let uid = 0
@@ -16,6 +17,7 @@ export interface DepTarget extends DebuggerOptions {
 /**
  * A dep is an observable that can have multiple
  * directives subscribing to it.
+ * 一个 dep 是一个 observable，可以有多个 指令订阅它。
  * @internal
  */
 export default class Dep {
@@ -37,7 +39,7 @@ export default class Dep {
   }
 
   depend(info?: DebuggerEventExtraInfo) {
-    console.log("dep depend:",info)
+    log("#039BE5","dep depend:",info,Dep.target)
     if (Dep.target) {
       Dep.target.addDep(this)
       if (__DEV__ && info && Dep.target.onTrack) {
@@ -75,6 +77,8 @@ export default class Dep {
 // The current target watcher being evaluated.
 // This is globally unique because only one watcher
 // can be evaluated at a time.
+// 当前正在评估的目标观察者。这是全局唯一的，因为一次只能评估一个观察者一次。
+
 Dep.target = null
 const targetStack: Array<DepTarget | null | undefined> = []
 

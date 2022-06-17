@@ -414,6 +414,10 @@ export function mergeOptions(
   // but only if it is a raw options object that isn't
   // the result of another mergeOptions call.
   // Only merged options has the _base property.
+  // 在子选项上应用扩展和混合， 
+  // 但前提是它是一个原始选项对象， 
+  // 不是另一个 mergeOptions 调用的结果。 
+  // 只有合并的选项具有 _base 属性。
   if (!child._base) {
     if (child.extends) {
       parent = mergeOptions(parent, child.extends, vm)

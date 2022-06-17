@@ -143,6 +143,7 @@ export function remove(arr: Array<any>, item: any): Array<any> | void {
 
 /**
  * Check whether an object has the property.
+ * 检查对象是否具有属性。
  */
 const hasOwnProperty = Object.prototype.hasOwnProperty
 export function hasOwn(obj: Object | Array<any>, key: string): boolean {
@@ -151,6 +152,7 @@ export function hasOwn(obj: Object | Array<any>, key: string): boolean {
 
 /**
  * Create a cached version of a pure function.
+ * 创建一个纯函数的缓存版本。
  */
 export function cached<R>(fn: (str: string) => R): (sr: string) => R {
   const cache: Record<string, R> = Object.create(null)
