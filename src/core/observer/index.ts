@@ -127,6 +127,7 @@ function copyAugment(target: Object, src: Object, keys: Array<string>) {
  * Attempt to create an observer instance for a value,* 尝试为一个值创建一个观察者实例， 
  * returns the new observer if successfully observed,* 如果成功观察，则返回新观察者， 
  * or the existing observer if the value already has one.* 如果值已经有一个，则返回现有观察者。
+ * value 就是data
  */
 export function observe(value: any, shallow?: boolean): Observer | void {
   log("#BA68C8","observer params value:",value)
@@ -178,7 +179,7 @@ export function defineReactive(
     val = obj[key]
   }
   console.log("defineReactive val:",{key:key,val})
-  //childOb,属性拦截，只要是对象类型都会返回childobj
+  //childOb,属性拦截，只要是对象类型都会返回childobj 递归遍历
   let childOb = !shallow && observe(val)
   log("#BA68C8","defineReactive childOb:",childOb)
   Object.defineProperty(obj, key, {

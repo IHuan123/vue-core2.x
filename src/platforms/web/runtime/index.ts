@@ -3,7 +3,7 @@ import config from 'core/config'
 import { extend, noop } from 'shared/util'
 import { mountComponent } from 'core/instance/lifecycle'
 import { devtools, inBrowser } from 'core/util/index'
-
+import { log } from 'core/util/debug'
 import {
   query,
   mustUseProp,
@@ -32,11 +32,12 @@ extend(Vue.options.components, platformComponents)
 // install platform patch function
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
-// public mount method
+// public mount method 公共挂载方法
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  log("#607D8B","runtime/index.ts method($mount)")
   el = el && inBrowser ? query(el) : undefined
   return mountComponent(this, el, hydrating)
 }

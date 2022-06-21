@@ -1,12 +1,14 @@
 /*
  * not type checking this file because flow doesn't play well with
  * dynamically accessing methods on Array prototype
+ * 不对这个文件进行类型检查，因为流不能很好地配合动态访问数组原型上的方法
  */
 
 import { TriggerOpTypes } from '../../v3'
 import { def } from '../util/index'
 
 const arrayProto = Array.prototype
+//以Array的原型创建一个对象
 export const arrayMethods = Object.create(arrayProto)
 
 const methodsToPatch = [
@@ -39,7 +41,7 @@ methodsToPatch.forEach(function (method) {
         break
     }
     if (inserted) ob.observeArray(inserted)
-    // notify change
+    // notify change 通知
     if (__DEV__) {
       ob.dep.notify({
         type: TriggerOpTypes.ARRAY_MUTATION,

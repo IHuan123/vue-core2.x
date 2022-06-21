@@ -8,7 +8,7 @@ import { toggleObserving } from '../observer/index'
 import { pushTarget, popTarget } from '../observer/dep'
 import type { Component } from 'types/component'
 import type { MountedComponentVNode } from 'types/vnode'
-
+import { log } from 'core/util/debug'
 import {
   warn,
   noop,
@@ -209,6 +209,11 @@ export function mountComponent(
   // we set this to vm._watcher inside the watcher's constructor
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
+  // 我们在 watcher 的构造函数中将其设置为 vm._watcher 
+  // 因为 watcher 的初始补丁可能会调用 $forceUpdate（例如在子组件内部 
+  // 组件的挂载钩子），这依赖于已经定义的 vm._watcher
+  // 整个应用该位置只会初始化一次
+  log("#7C4DFF","lifecycle.ts method(mountComponent):","new Watcher")
   new Watcher(
     vm,
     updateComponent,
@@ -220,6 +225,8 @@ export function mountComponent(
 
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
+  // 手动挂载实例，调用mounted on self 
+  // 在其插入的钩子中为渲染创建的子组件调用mounted
   if (vm.$vnode == null) {
     const preWatchers = vm._preWatchers
     if (preWatchers) {

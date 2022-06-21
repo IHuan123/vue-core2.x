@@ -39,7 +39,8 @@ export default class Dep {
   }
 
   depend(info?: DebuggerEventExtraInfo) {
-    log("#039BE5","dep depend:",info,Dep.target)
+    log("#039BE5","dep.ts method(depend)>variable(info&Dep.target):", info, Dep.target)
+    // 存在依赖才收集
     if (Dep.target) {
       Dep.target.addDep(this)
       if (__DEV__ && info && Dep.target.onTrack) {

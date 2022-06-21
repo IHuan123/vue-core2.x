@@ -170,7 +170,8 @@ function initData(vm: Component) {
 }
 
 export function getData(data: Function, vm: Component): any {
-  // #7573 disable dep collection when invoking data getters
+  // #7573 disable dep collection when invoking data getters 
+  // 调用数据获取器时禁用 dep 收集
   pushTarget()
   try {
     return data.call(vm, vm)
@@ -199,6 +200,7 @@ function initComputed(vm: Component, computed: Object) {
 
     if (!isSSR) {
       // create internal watcher for the computed property.
+      // 为计算属性创建内部观察者。
       watchers[key] = new Watcher(
         vm,
         getter || noop,

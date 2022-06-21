@@ -61,10 +61,10 @@ export function initMixin(Vue: typeof Component) {
     initEvents(vm); //对父组件传入事件添加监听,初始化事件
     initRender(vm); //生命$slots,$createElemnet,渲染相关的
     callHook(vm, "beforeCreate");
-    initInjections(vm); // resolve injections before data/props，注入数据
+    initInjections(vm); // resolve injections before data/props，inject注入数据
     //数据初始化
     initState(vm); //初始化props、data、watch、methods、computed等属性，因此在beforeCreate的钩子函数中获取不到前面的这些定义的属性和方法
-    initProvide(vm); // resolve provide after data/props，提供数据
+    initProvide(vm); // resolve provide after data/props，provide提供数据
     callHook(vm, 'created')
 
     /* istanbul ignore if */
@@ -73,7 +73,7 @@ export function initMixin(Vue: typeof Component) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-    log("#FF5722","initMixin vm:",vm,vm.$options)
+    log("#FF5722","init.ts method(initMixin)>variable(vm):",vm,vm.$options)
     //最终挂载方法
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)

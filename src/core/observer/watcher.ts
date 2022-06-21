@@ -115,6 +115,7 @@ export default class Watcher implements DepTarget {
           )
       }
     }
+    // 初始化watcher获取data数据
     this.value = this.lazy ? undefined : this.get()
   }
 
@@ -147,6 +148,7 @@ export default class Watcher implements DepTarget {
 
   /**
    * Add a dependency to this directive.
+   * 向该指令添加依赖项。
    */
   addDep(dep: Dep) {
     const id = dep.id
