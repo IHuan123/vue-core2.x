@@ -14,13 +14,13 @@ function Vue(options) {
   // 在initMixin中处理
   this._init(options)
 }
-
+console.log("初始化开始")
 //@ts-expect-error Vue has function type
-initMixin(Vue)
+initMixin(Vue) //
 //@ts-expect-error Vue has function type
 stateMixin(Vue)
 //@ts-expect-error Vue has function type
-eventsMixin(Vue)
+eventsMixin(Vue) //混入事件 $on $once $off $emit
 //@ts-expect-error Vue has function type
 lifecycleMixin(Vue)
 //@ts-expect-error Vue has function type
