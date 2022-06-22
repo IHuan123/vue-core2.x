@@ -1,3 +1,4 @@
+// 初始化全局api（文档：https://cn.vuejs.org/v2/api/#全局-API）
 import config from '../config'
 import { initUse } from './use'
 import { initMixin } from './mixin'
@@ -28,6 +29,7 @@ export function initGlobalAPI(Vue: GlobalAPI) {
       )
     }
   }
+  // 配置开发配置参数
   Object.defineProperty(Vue, 'config', configDef)
 
   // exposed util methods.
@@ -61,8 +63,12 @@ export function initGlobalAPI(Vue: GlobalAPI) {
 
   extend(Vue.options.components, builtInComponents)
 
+  // Vue.use
   initUse(Vue)
+  // Vue.mixin
   initMixin(Vue)
+  // Vue.extend
   initExtend(Vue)
+  // 全局组件和全局自定义指令
   initAssetRegisters(Vue)
 }

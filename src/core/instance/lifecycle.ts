@@ -142,6 +142,7 @@ export function mountComponent(
   hydrating?: boolean
 ): Component {
   vm.$el = el
+  // 如何配置中没有render就创建一个空的VNode的方法
   if (!vm.$options.render) {
     // @ts-expect-error invalid type
     vm.$options.render = createEmptyVNode
@@ -213,7 +214,7 @@ export function mountComponent(
   // 因为 watcher 的初始补丁可能会调用 $forceUpdate（例如在子组件内部 
   // 组件的挂载钩子），这依赖于已经定义的 vm._watcher
   // 整个应用该位置只会初始化一次
-  log("#7C4DFF","lifecycle.ts method(mountComponent):","new Watcher")
+  log("#7C4DFF","lifecycle.ts method(mountComponent):","---->new Watcher")
   new Watcher(
     vm,
     updateComponent,
@@ -379,13 +380,15 @@ export function deactivateChildComponent(vm: Component, direct?: boolean) {
     callHook(vm, 'deactivated')
   }
 }
-
+// 生命周期回调 以及eventBus
 export function callHook(vm: Component, hook: string, args?: any[]) {
   // #7573 disable dep collection when invoking lifecycle hooks
+  // 调用生命周期钩子时禁用 dep 收集
   pushTarget()
   const prev = currentInstance
   setCurrentInstance(vm)
-  const handlers = vm.$options[hook]
+  const handlers = vm.$options[hook] //数组形式，同一个生命周期可以能会有多个执行函数（如mixin中的）
+  log("#7C4DFF","lifecycle.ts method(callHook)>const(handlers):",handlers, "--------->"+hook)
   const info = `${hook} hook`
   if (handlers) {
     for (let i = 0, j = handlers.length; i < j; i++) {

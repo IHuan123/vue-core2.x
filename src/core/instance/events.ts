@@ -55,7 +55,7 @@ export function updateComponentListeners(
   )
   target = undefined
 }
-
+// eventbus
 export function eventsMixin(Vue: typeof Component) {
   const hookRE = /^hook:/
   Vue.prototype.$on = function (
@@ -127,7 +127,7 @@ export function eventsMixin(Vue: typeof Component) {
     }
     return vm
   }
-
+  // 自定义事件
   Vue.prototype.$emit = function (event: string): Component {
     const vm: Component = this
     if (__DEV__) {

@@ -37,12 +37,13 @@ Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
-  log("#607D8B","runtime/index.ts method($mount)")
+  log("#607D8B","runtime/index.ts method($mount)>var(this)",this)
   el = el && inBrowser ? query(el) : undefined
   return mountComponent(this, el, hydrating)
 }
 
 // devtools global hook
+// devtools 全局钩子
 /* istanbul ignore next */
 if (inBrowser) {
   setTimeout(() => {

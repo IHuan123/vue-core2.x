@@ -130,7 +130,7 @@ function copyAugment(target: Object, src: Object, keys: Array<string>) {
  * value 就是data
  */
 export function observe(value: any, shallow?: boolean): Observer | void {
-  log("#BA68C8","observer params value:",value)
+  // log("#BA68C8","observer params value:",value)
   if (!isObject(value) || isRef(value) || value instanceof VNode) {
     return
   }
@@ -171,14 +171,14 @@ export function defineReactive(
   // cater for pre-defined getter/setters
   const getter = property && property.get
   const setter = property && property.set
-  console.log("observer setter&getter:",setter,getter)
+  log("#BA68C8","observer setter&getter",setter,getter)
   if (
     (!getter || setter) &&
     (val === NO_INIITIAL_VALUE || arguments.length === 2)
   ) {
     val = obj[key]
   }
-  console.log("defineReactive val:",{key:key,val})
+  log("#BA68C8","defineReactive val:",{key:key,val})
   //childOb,属性拦截，只要是对象类型都会返回childobj 递归遍历
   let childOb = !shallow && observe(val)
   log("#BA68C8","defineReactive childOb:",childOb)

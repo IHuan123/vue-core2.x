@@ -2,6 +2,7 @@ import config from 'core/config'
 import { warn, cached } from 'core/util/index'
 import { mark, measure } from 'core/util/perf'
 
+// 这文件中在prototype中挂载了$mount
 import Vue from './runtime/index'
 import { query } from './util/index'
 import { compileToFunctions } from './compiler/index'
@@ -16,9 +17,11 @@ const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
+log("#A5D6A7","platforms/web/runtime-with-complier.ts 最开始执行位置")
 // 这里获取到的$mount是runtime/index.ts中设置的$mount
 const mount = Vue.prototype.$mount
 log("#FF8F00","runtime-with-complier.ts const(mount)",mount)
+// 这里重写了在runtime/index中的$mount方法
 // $mount主要实现了 vue 渲染过程中很重要的一步，得到 render 函数。
 // 如果我们使用的 template 进行编写HTML代码，vue 内部会把模板编译成 vue 可识别的 render 函数，如果有写 render 则可以省去编译过程。（ 直接写 render 函数对 vue 编译效率会更好 ）
 Vue.prototype.$mount = function (
@@ -26,6 +29,7 @@ Vue.prototype.$mount = function (
   hydrating?: boolean
 ): Component {
   log("#FF8F00","runtime-with-complier.ts method($mount)")
+  // 获取根元素
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -50,6 +54,7 @@ Vue.prototype.$mount = function (
     let template = options.template
     if (template) {
       if (typeof template === 'string') {
+        // 如何是元素id，则通过id来获取dom
         if (template.charAt(0) === '#') {
           template = idToTemplate(template)
           /* istanbul ignore if */
@@ -72,13 +77,13 @@ Vue.prototype.$mount = function (
       // @ts-expect-error
       template = getOuterHTML(el)
     }
-    log("#FF8F00","$mount template:",template)
+    log("#FF8F00","runtime-with-complier.ts method($mount)>var(template):",template)
     if (template) {
       /* istanbul ignore if */
       if (__DEV__ && config.performance && mark) {
         mark('compile')
       }
-      
+      // 通过获取到的模版创建render函数
       const { render, staticRenderFns } = compileToFunctions(
         template,
         {
@@ -90,7 +95,9 @@ Vue.prototype.$mount = function (
         },
         this
       )
+
       options.render = render
+      log("#FF8F00","runtime-with-complier.ts method($mount)>var(render):",render)
       options.staticRenderFns = staticRenderFns
 
       /* istanbul ignore if */
