@@ -301,8 +301,9 @@ export function validateComponentName(name: string) {
 }
 
 /**
- * Ensure all props option syntax are normalized into the
+ * Ensure all props option syntax are normalized into the 
  * Object-based format.
+ * 确保所有 props 选项语法都标准化为基于对象的格式。
  */
 function normalizeProps(options: Record<string, any>, vm?: Component | null) {
   const props = options.props
@@ -391,6 +392,7 @@ function assertObjectType(name: string, value: any, vm: Component | null) {
 /**
  * Merge two option objects into a new one.
  * Core utility used in both instantiation and inheritance.
+ * 将两个选项对象合并为一个新的。 用于实例化和继承的核心实用程序。
  */
 export function mergeOptions(
   parent: Record<string, any>,

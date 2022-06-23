@@ -35,6 +35,7 @@ export function initGlobalAPI(Vue: GlobalAPI) {
   // exposed util methods.
   // NOTE: these are not considered part of the public API - avoid relying on
   // them unless you are aware of the risk.
+  // 暴露的 util 方法。 // 注意：这些不被视为公共 API 的一部分 - 除非您意识到风险，否则请避免依赖它们。
   Vue.util = {
     warn,
     extend,
@@ -51,14 +52,16 @@ export function initGlobalAPI(Vue: GlobalAPI) {
     observe(obj)
     return obj
   }
-
+  // 在Vue中初始化options
   Vue.options = Object.create(null)
+  // ['components', 'directives', 'filters']
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })
 
   // this is used to identify the "base" constructor to extend all plain-object
   // components with in Weex's multi-instance scenarios.
+  // 这用于标识在 Weex 的多实例场景中扩展所有普通对象 // 组件的“基础”构造函数。
   Vue.options._base = Vue
 
   extend(Vue.options.components, builtInComponents)

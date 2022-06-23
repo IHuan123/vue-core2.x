@@ -37,6 +37,7 @@ export function initMixin(Vue: typeof Component) {
     vm._scope = new EffectScope(true /* detached */)
     // merge options
     //判断是不是一个组件，是的话执行initInternalComponent，否则合并options
+    // 所有options都会写入vm.$options
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -58,7 +59,7 @@ export function initMixin(Vue: typeof Component) {
     }
     // expose real self
     vm._self = vm; //把vm放在_self属性上暴露出去
-    initLifecycle(vm); //初始化生命周期：$parent,$root,$children,$refs
+    initLifecycle(vm); //初始化生命周期相关变量：$parent,$root,$children,$refs
     initEvents(vm); //对父组件传入事件添加监听,初始化事件
     initRender(vm); //生命$slots,$createElemnet,渲染相关的
     callHook(vm, "beforeCreate");
@@ -74,7 +75,7 @@ export function initMixin(Vue: typeof Component) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-    log("#FF5722","init.ts method(initMixin)>variable(vm):",vm,vm.$options)
+    log("#FF5722","init.ts method(initMixin)>variable(vm):",vm)
     //最终挂载方法
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
@@ -105,8 +106,9 @@ export function initInternalComponent(
 }
 
 export function resolveConstructorOptions(Ctor: typeof Component) {
+  log("#FF5722","init.ts method(resolveConstructorOptions)>variable(Ctor):",Ctor.options,Ctor.super)
   let options = Ctor.options
-  if (Ctor.super) {
+  if (Ctor.super) { // 判断是否为子类
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions
     if (superOptions !== cachedSuperOptions) {

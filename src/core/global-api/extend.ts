@@ -3,7 +3,7 @@ import type { Component } from 'types/component'
 import type { GlobalAPI } from 'types/global-api'
 import { defineComputed, proxy } from '../instance/state'
 import { extend, mergeOptions, validateComponentName } from '../util/index'
-
+import { log } from '../util/debug'
 export function initExtend(Vue: GlobalAPI) {
   /**
    * Each instance constructor, including Vue, has a unique
@@ -17,14 +17,14 @@ export function initExtend(Vue: GlobalAPI) {
    * Class inheritance
    */
   Vue.extend = function (extendOptions: any): typeof Component {
+    log("#00C853","init.ts method(Vue.extend)>variable(extendOptions):",extendOptions)
     extendOptions = extendOptions || {}
-    const Super = this
+    const Super = this // this就是Vue本身
     const SuperId = Super.cid
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {
       return cachedCtors[SuperId]
     }
-
     const name = extendOptions.name || Super.options.name
     if (__DEV__ && name) {
       validateComponentName(name)
@@ -34,14 +34,18 @@ export function initExtend(Vue: GlobalAPI) {
       this._init(options)
     } as unknown as typeof Component
     Sub.prototype = Object.create(Super.prototype)
+    
+    // 将VueComponent设为构造函数，这里解决修改原型对象中构造函数指向错误的问题
     Sub.prototype.constructor = Sub
     Sub.cid = cid++
+    log("#00C853","init.ts method(Vue.extend)>variable(Super.options):",Super.options)
     Sub.options = mergeOptions(Super.options, extendOptions)
-    Sub['super'] = Super
+    Sub['super'] = Super //设置父级
 
     // For props and computed properties, we define the proxy getters on
     // the Vue instances at extension time, on the extended prototype. This
     // avoids Object.defineProperty calls for each instance created.
+    // 对于 props 和计算属性，我们在扩展时在扩展原型上的 Vue 实例上定义代理 getter。这避免了对创建的每个实例的 Object.defineProperty 调用。
     if (Sub.options.props) {
       initProps(Sub)
     }
@@ -70,7 +74,7 @@ export function initExtend(Vue: GlobalAPI) {
     Sub.superOptions = Super.options
     Sub.extendOptions = extendOptions
     Sub.sealedOptions = extend({}, Sub.options)
-
+    console.dir(Sub)
     // cache constructor
     cachedCtors[SuperId] = Sub
     return Sub

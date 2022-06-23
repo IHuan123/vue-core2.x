@@ -83,7 +83,7 @@ Vue.prototype.$mount = function (
       if (__DEV__ && config.performance && mark) {
         mark('compile')
       }
-      // 通过获取到的模版创建render函数
+      // 通过获取到通过模版创建的render函数
       const { render, staticRenderFns } = compileToFunctions(
         template,
         {
@@ -95,11 +95,10 @@ Vue.prototype.$mount = function (
         },
         this
       )
-
       options.render = render
       log("#FF8F00", "runtime-with-complier.ts method($mount)>var(render):", render)
       options.staticRenderFns = staticRenderFns
-
+      
       /* istanbul ignore if */
       if (__DEV__ && config.performance && mark) {
         mark('compile end')

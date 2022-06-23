@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>index</title>
+    <script src="../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      {{ message }}---{{ count }}
+      <button @click="add">add</button>
+      <h1>array methods</h1>
+      <ul>
+        <li v-for="item in list" :key="item.key">
+          current: {{item}}
+          <button @click="removeList(item)">-</button>
+        </li>
+        <button @click="addList">+</button>
+      </ul>
+    </div>
+  </body>
+  <script>
+    // 可以在new Vue中直接写el，或者new Vue().$mount(id)
+    var ComponentA = {
+      template: "<i @click='f'>custom Component</i>",
+      data(){
+        return { test:"name" }
+      },
+      methods: {
+        f() {
+          this.$emit('test')
+          // events.$emit("testEvent")
+        }
+      }
+    }
+
+
+    var tMixin = {
+      mounted() {
+        console.log('mixin')
+      }
+    }
+    const vm = new Vue({
+      el: document.getElementById('root'),
+      components: { 'component-a': ComponentA },
+      // mixins:[tMixin],
+      // props:{
+      //   message:{
+      //     type:String,
+      //     default:"this is props message"
+      //   }
+      // },
+      // template:`<div>template --- {{message}}</div>`,
+      data: {
+        message: 'this is data message',
+        count: 1,
+        list: [
+          { value: 1, key: 1 },
+          { value: 2, key: 2 },
+          { value: 3, key: 3 },
+          { value: 4, key: 4 }
+        ]
+      },
+      computed: {
+        // message(){
+        //   return "this is computed message"
+        // }
+      },
+      mounted() {
+        console.log('####################### mounted')
+      },
+      methods: {
+        add() {
+          this.count++
+        },
+        addList() {
+          let last = this.list[this.list.length - 1].value + 1
+          this.list.push({ value: last, key: last })
+        },
+        removeList(item) {
+          let index = this.list.indexOf(item)
+          if (index > -1) {
+            this.list.splice(index, 1)
+          }
+        },
+        customEvent() {
+          console.log('this.$emit', this)
+        }
+      }
+    })
+    // .$mount("#root")
+    //通过模版生成的render
+    // function anonymous() {
+    //   with (this) {
+    //     return _c('div', { attrs: { id: 'root' } }, [
+    //       _v('\n        ' + _s(message) + '---' + _s(count) + '\n        '),
+    //       _c('button', { on: { click: add } }, [_v('add')]),
+    //       _v(' '),
+    //       _c('h1', [_v('array methods')]),
+    //       _v(' '),
+    //       _c(
+    //         'ul',
+    //         [
+    //           _l(list, function (item) {
+    //             return _c('li', { key: item.key }, [
+    //               _v('\n            current: ' + _s(item) + '\n            '),
+    //               _c(
+    //                 'button',
+    //                 {
+    //                   on: {
+    //                     click: function ($event) {
+    //                       return removeList(item)
+    //                     }
+    //                   }
+    //                 },
+    //                 [_v('-')]
+    //               )
+    //             ])
+    //           }),
+    //           _v(' '),
+    //           _c('button', { on: { click: addList } }, [_v('+')])
+    //         ],
+    //         2
+    //       )
+    //     ])
+    //   }
+    // }
+  </script>
+</html>

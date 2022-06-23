@@ -261,6 +261,7 @@ export function toObject(arr: Array<any>): object {
  * Stubbing args to make Flow happy without leaving useless transpiled code
  * with ...rest (https://flow.org/blog/2017/05/07/Strict-Function-Call-Arity/).
  */
+// 在vue源码中的这个noop无操作空函数，主要作用就是为一些函数提供默认值，避免传入undefined之类的数据导致代码出错。
 export function noop(a?: any, b?: any, c?: any) {}
 
 /**

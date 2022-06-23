@@ -51,7 +51,7 @@ export function createCompileToFunctionFn(compile: Function): Function {
     // check cache
     const key = options.delimiters
       ? String(options.delimiters) + template
-      : template
+      : template;
     if (cache[key]) {
       return cache[key]
     }
@@ -113,7 +113,6 @@ export function createCompileToFunctionFn(compile: Function): Function {
         )
       }
     }
-
     return (cache[key] = res)
   }
 }
