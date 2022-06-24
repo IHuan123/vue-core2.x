@@ -51,8 +51,8 @@ export function proxy(target: Object, sourceKey: string, key: string) {
 
 export function initState(vm: Component) {
   const opts = vm.$options
+    // 顺序 props->methods->data->computed->watch
   if (opts.props) initProps(vm, opts.props)
-  // 顺序 props->methods->data->computed->watch
   // Composition API
   initSetup(vm)
   // 初始化methods
@@ -126,6 +126,7 @@ function initProps(vm: Component, propsOptions: Object) {
 function initData(vm: Component) {
   let data: any = vm.$options.data
   console.log("initData",typeof data)
+  // 获取data存入vm._data
   data = vm._data = isFunction(data) ? getData(data, vm) : data || {}
   // isPlainObject 判断是否为Object
   if (!isPlainObject(data)) {
@@ -142,6 +143,7 @@ function initData(vm: Component) {
   const props = vm.$options.props
   const methods = vm.$options.methods
   let i = keys.length
+  // 遍历代理data
   while (i--) {
     const key = keys[i]
     if (__DEV__) {
@@ -164,7 +166,7 @@ function initData(vm: Component) {
       proxy(vm, `_data`, key)
     }
   }
-  // observe data
+  // observe data 对data数据进行响应式处理
   const ob = observe(data)
   ob && ob.vmCount++
 }

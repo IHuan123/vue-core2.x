@@ -51,7 +51,7 @@ export default class Dep {
       }
     }
   }
-
+  // 数据更新通知watcher执行update
   notify(info?: DebuggerEventExtraInfo) {
     // stabilize the subscriber list first
     const subs = this.subs.slice()

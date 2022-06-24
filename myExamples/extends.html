@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>index</title>
+    <script src="../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <!-- <div>
+            {{ message }}---{{ count }}
+            <button @click="add">add</button>
+        </div> -->
+    </div>
+  </body>
+  <script>
+    var ComponentA = Vue.extend({
+      data() {
+        return { test: 'name' }
+      },
+      methods: {
+        f() {
+          console.log('ComponentA function f()')
+        }
+      },
+      render(h) {
+        const { f } = this
+        return (
+          h('i', {
+            on: {
+              click: f
+            }
+          }),
+          'custom Component'
+        )
+      }
+    })
+    const vm = new Vue({
+      el: document.getElementById('root'),
+      components: { 'component-a': ComponentA },
+      extends: ComponentA,
+      data: {
+        message: 'this is data message',
+        count: 1
+      },
+      mounted() {
+        console.log('####################### mounted')
+      },
+      methods: {
+        add() {
+          this.count++
+          this.f()
+        },
+
+        customEvent() {
+          console.log('this.$emit', this)
+        }
+      },
+
+      render(h) {
+        const { message, count, add } = this
+        return h('div', {}, [
+          `${message}---${count}`,
+          h(
+            'button',
+            {
+              on: {
+                click: add
+              }
+            },
+            'add'
+          ),
+        ])
+      }
+    })
+  </script>
+</html>

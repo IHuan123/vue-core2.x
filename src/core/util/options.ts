@@ -89,6 +89,7 @@ export function mergeDataOrFn(
 ): Function | null {
   if (!vm) {
     // in a Vue.extend merge, both should be functions
+    // 在 Vue.extend 合并中，两者都应该是函数
     if (!childVal) {
       return parentVal
     }
@@ -149,21 +150,17 @@ strats.data = function (
 
 /**
  * Hooks and props are merged as arrays.
+ * 钩子和道具合并为数组。
+ * 主要将生命周期函数合并为数组
  */
 export function mergeLifecycleHook(
   parentVal: Array<Function> | null,
   childVal: Function | Array<Function> | null
 ): Array<Function> | null {
-  const res = childVal
-    ? parentVal
-      ? parentVal.concat(childVal)
-      : isArray(childVal)
-      ? childVal
-      : [childVal]
-    : parentVal
+  const res = childVal ? parentVal ? parentVal.concat(childVal) : isArray(childVal) ? childVal : [childVal] : parentVal
   return res ? dedupeHooks(res) : res
 }
-
+// 去除重复的钩子函数
 function dedupeHooks(hooks: any) {
   const res: Array<any> = []
   for (let i = 0; i < hooks.length; i++) {
@@ -241,7 +238,7 @@ strats.watch = function (
 }
 
 /**
- * Other object hashes.
+ * Other object hashes. 其他对象哈希。
  */
 strats.props =
   strats.methods =
@@ -421,9 +418,11 @@ export function mergeOptions(
   // 不是另一个 mergeOptions 调用的结果。 
   // 只有合并的选项具有 _base 属性。
   if (!child._base) {
+    // 将extends合并到options中
     if (child.extends) {
       parent = mergeOptions(parent, child.extends, vm)
     }
+    //将mixins合并到options中
     if (child.mixins) {
       for (let i = 0, l = child.mixins.length; i < l; i++) {
         parent = mergeOptions(parent, child.mixins[i], vm)

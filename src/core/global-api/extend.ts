@@ -29,7 +29,7 @@ export function initExtend(Vue: GlobalAPI) {
     if (__DEV__ && name) {
       validateComponentName(name)
     }
-
+    // Vue子类构造函数
     const Sub = function VueComponent(this: any, options: any) {
       this._init(options)
     } as unknown as typeof Component
@@ -71,9 +71,10 @@ export function initExtend(Vue: GlobalAPI) {
     // keep a reference to the super options at extension time.
     // later at instantiation we can check if Super's options have
     // been updated.
-    Sub.superOptions = Super.options
-    Sub.extendOptions = extendOptions
-    Sub.sealedOptions = extend({}, Sub.options)
+    // 在扩展时保留对父级选项的引用。稍后在实例化时，我们可以检查 Super 的选项是否已经更新。
+    Sub.superOptions = Super.options //缓存保留父级options
+    Sub.extendOptions = extendOptions //当前传入的options
+    Sub.sealedOptions = extend({}, Sub.options) // 缓存当前合并后的options
     console.dir(Sub)
     // cache constructor
     cachedCtors[SuperId] = Sub
