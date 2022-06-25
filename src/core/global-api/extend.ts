@@ -54,6 +54,7 @@ export function initExtend(Vue: GlobalAPI) {
     }
 
     // allow further extension/mixin/plugin usage
+    // 允许进一步的扩展/混合/插件使用
     Sub.extend = Super.extend
     Sub.mixin = Super.mixin
     Sub.use = Super.use
