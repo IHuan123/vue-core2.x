@@ -36,6 +36,7 @@ export interface WatcherOptions extends DebuggerOptions {
  * A watcher parses an expression, collects dependencies,
  * and fires callback when the expression value changes.
  * This is used for both the $watch() api and directives.
+ * * 观察者解析表达式，收集依赖关系，并在表达式值更改时触发回调。 这用于 $watch() api 和指令。
  * @internal
  */
 export default class Watcher implements DepTarget {
@@ -59,7 +60,7 @@ export default class Watcher implements DepTarget {
   getter: Function
   value: any
 
-  // dev only
+  // dev only 开发时使用
   onTrack?: ((event: DebuggerEvent) => void) | undefined
   onTrigger?: ((event: DebuggerEvent) => void) | undefined
 
@@ -100,6 +101,7 @@ export default class Watcher implements DepTarget {
     this.newDepIds = new Set()
     this.expression = __DEV__ ? expOrFn.toString() : ''
     // parse expression for getter
+    console.log("expOrFn",expOrFn)
     if (isFunction(expOrFn)) {
       this.getter = expOrFn
     } else {
@@ -123,11 +125,13 @@ export default class Watcher implements DepTarget {
    * Evaluate the getter, and re-collect dependencies.
    */
   get() {
+    console.log("observer/watcher.ts method(get)")
     pushTarget(this)
     let value
     const vm = this.vm
     try {
       value = this.getter.call(vm, vm)
+      
     } catch (e: any) {
       if (this.user) {
         handleError(e, vm, `getter for watcher "${this.expression}"`)
@@ -140,6 +144,7 @@ export default class Watcher implements DepTarget {
       if (this.deep) {
         traverse(value)
       }
+      // 弹出target防止data上每个属性都产生依赖，只有页面上使用的变量需要依赖
       popTarget()
       this.cleanupDeps()
     }

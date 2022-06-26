@@ -136,7 +136,6 @@ export function lifecycleMixin(Vue: typeof Component) {
     }
   }
 }
-
 export function mountComponent(
   vm: Component,
   el: Element | null | undefined,
@@ -169,7 +168,7 @@ export function mountComponent(
     }
   }
   callHook(vm, 'beforeMount')
-
+  // 定义更新组件方法
   let updateComponent
   /* istanbul ignore if */
   if (__DEV__ && config.performance && mark) {
@@ -215,7 +214,7 @@ export function mountComponent(
   // 因为 watcher 的初始补丁可能会调用 $forceUpdate（例如在子组件内部 
   // 组件的挂载钩子），这依赖于已经定义的 vm._watcher
   // 整个应用该位置只会初始化一次
-  log("#7C4DFF","lifecycle.ts method(mountComponent):","---->new Watcher")
+  log("#7C4DFF","instance.ts/lifecycle.ts method(mountComponent):","---->new Watcher")
   new Watcher(
     vm,
     updateComponent,

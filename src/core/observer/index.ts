@@ -51,10 +51,11 @@ export class Observer {
     // this.value = value
     //创建依赖收集的容器
     this.dep = new Dep()
-    log("#BA68C8","observer this.dep:",this.dep)
+    log("#BA68C8","observer/index.ts var(dep):",this.dep)
     this.vmCount = 0
-    //设置一个__ob__属性引用当前observer实例
-    def(value, '__ob__', this)
+    //设置一个__ob__属性引用当前observer实例，为每一个监控的属性都添加一个——__ob__
+    // 必须使用Object.defineProperty这个来添加__ob__，这样时防止在每次递归响应化时都会对__ob__做处理，以下方法可以设置__ob__不可枚举和配置，在遍历时就无法获取，防止死循环
+    def(value, '__ob__', this) 
     //判断类型
     if (isArray(value)) {
       //如果是数组，替换数组对象的原型
@@ -89,6 +90,7 @@ export class Observer {
 
   /**
    * Observe a list of Array items.
+   * 对数组进行响应化
    */
   observeArray(items: Array<any>) {
     for (let i = 0, l = items.length; i < l; i++) {
@@ -171,22 +173,18 @@ export function defineReactive(
   // cater for pre-defined getter/setters
   const getter = property && property.get
   const setter = property && property.set
-  log("#BA68C8","observer setter&getter",setter,getter)
   if (
     (!getter || setter) &&
     (val === NO_INIITIAL_VALUE || arguments.length === 2)
   ) {
     val = obj[key]
   }
-  log("#BA68C8","defineReactive val:",{key:key,val})
   //childOb,属性拦截，只要是对象类型都会返回childobj 递归遍历
   let childOb = !shallow && observe(val)
-  log("#BA68C8","defineReactive childOb:",childOb)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter() {
-      log("#BA68C8","defineReactive defineProperty get:",{key:key,val},dep)
       const value = getter ? getter.call(obj) : val
       //如果存在依赖
       if (Dep.target) {
@@ -244,7 +242,7 @@ export function defineReactive(
       }
     }
   })
-
+  log("#BA68C8","observer/index.ts var(dep):",dep)
   return dep
 }
 
