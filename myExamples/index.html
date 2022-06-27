@@ -12,7 +12,7 @@
       {{ message }}---{{ count }}
       <button @click="add">add</button>
       <h1>array methods</h1>
-      <ul>
+      <ul style="color:red">
         <li v-for="item in list" :key="item.key">
           current: {{item}}
           <button @click="removeList(item)">-</button>

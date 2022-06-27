@@ -55,7 +55,7 @@ export function createCompileToFunctionFn(compile: Function): Function {
     if (cache[key]) {
       return cache[key]
     }
-
+    
     // compile
     const compiled = compile(template, options)
 

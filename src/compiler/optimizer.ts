@@ -24,9 +24,9 @@ export function optimize(
   if (!root) return
   isStaticKey = genStaticKeysCached(options.staticKeys || '')
   isPlatformReservedTag = options.isReservedTag || no
-  // first pass: mark all non-static nodes.
+  // first pass: mark all non-static nodes. 第一遍：标记所有非静态节点。
   markStatic(root)
-  // second pass: mark static roots.
+  // second pass: mark static roots. 第二遍：标记静态根。
   markStaticRoots(root, false)
 }
 

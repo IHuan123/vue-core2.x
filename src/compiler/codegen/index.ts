@@ -69,7 +69,7 @@ export function generate(
     staticRenderFns: state.staticRenderFns
   }
 }
-
+// 生成字符串
 export function genElement(el: ASTElement, state: CodegenState): string {
   if (el.parent) {
     el.pre = el.pre || el.parent.pre

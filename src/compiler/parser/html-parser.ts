@@ -59,16 +59,16 @@ function decodeAttr(value, shouldDecodeNewlines) {
 }
 
 export interface HTMLParserOptions extends CompilerOptions {
-  start?: (
+  start?: ( // 开始标签及属性的收集
     tag: string,
     attrs: ASTAttr[],
     unary: boolean,
     start: number,
     end: number
   ) => void
-  end?: (tag: string, start: number, end: number) => void
-  chars?: (text: string, start?: number, end?: number) => void
-  comment?: (content: string, start: number, end: number) => void
+  end?: (tag: string, start: number, end: number) => void // 结束标签收集
+  chars?: (text: string, start?: number, end?: number) => void // 文本标签收集
+  comment?: (content: string, start: number, end: number) => void // 注释收集
 }
 // 解析template模版
 export function parseHTML(html, options: HTMLParserOptions) {
@@ -214,7 +214,7 @@ export function parseHTML(html, options: HTMLParserOptions) {
 
   // Clean up any remaining tags
   parseEndTag()
-
+  // 截取
   function advance(n) {
     index += n
     html = html.substring(n)

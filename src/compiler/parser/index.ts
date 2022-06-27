@@ -104,11 +104,11 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
 
   delimiters = options.delimiters
 
-  const stack: any[] = []
+  const stack: any[] = [] // 存放标签的一个栈，主要是验证模版语法是否是书写规范
   const preserveWhitespace = options.preserveWhitespace !== false
   const whitespaceOption = options.whitespace
   let root
-  let currentParent
+  let currentParent // 标记当前节点的父节点
   let inVPre = false
   let inPre = false
   let warned = false
@@ -222,9 +222,11 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
-    start(tag, attrs, unary, start, end) {
-      // check namespace.
-      // inherit parent ns if there is one
+    // 开始标签及属性的收集
+    start(tag, attrs, unary, start, end) { 
+      // check namespace.// 检查命名空间。
+      // inherit parent ns if there is one // 如果有，则继承父 ns
+      
       const ns =
         (currentParent && currentParent.ns) || platformGetTagNamespace(tag)
 
@@ -313,7 +315,7 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
         closeElement(element)
       }
     },
-
+    // 结束标签收集
     end(tag, start, end) {
       const element = stack[stack.length - 1]
       // pop stack
@@ -324,7 +326,7 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
       }
       closeElement(element)
     },
-
+    // 文本标签收集
     chars(text: string, start?: number, end?: number) {
       if (!currentParent) {
         if (__DEV__) {
@@ -402,6 +404,7 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
         }
       }
     },
+    // 注释收集
     comment(text: string, start, end) {
       // adding anything as a sibling to the root node is forbidden
       // 禁止将任何东西作为兄弟节点添加到根节点
@@ -421,6 +424,7 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
       }
     }
   })
+  
   return root
 }
 
