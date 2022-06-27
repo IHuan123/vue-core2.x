@@ -13,23 +13,26 @@ import { makeMap, no } from 'shared/util'
 import { isNonPhrasingTag } from 'web/compiler/util'
 import { unicodeRegExp } from 'core/util/lang'
 import { ASTAttr, CompilerOptions } from 'types/compiler'
-
-// Regular Expressions for parsing tags and attributes
+import { log } from '../../core/util/debug'
+// Regular Expressions for parsing tags and attributes 
+// 用于解析标签和属性的正则表达式
 const attribute =
   /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
 const dynamicArgAttribute =
   /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+?\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
 const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
-const qnameCapture = `((?:${ncname}\\:)?${ncname})`
-const startTagOpen = new RegExp(`^<${qnameCapture}`)
-const startTagClose = /^\s*(\/?)>/
-const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
+const qnameCapture = `((?:${ncname}\\:)?${ncname})` //匹配命名空间
+const startTagOpen = new RegExp(`^<${qnameCapture}`) //主要匹配开始标签
+const startTagClose = /^\s*(\/?)>/ // 匹配一个标签结束的>,如<div>中的>
+const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`) //匹配闭合标签，如</div>
 const doctype = /^<!DOCTYPE [^>]+>/i
-// #7298: escape - to avoid being passed as HTML comment when inlined in page
+// #7298: escape - to avoid being passed as HTML comment when inlined in page 
+// 转义 - 避免在页面内联时作为 HTML 注释传递
 const comment = /^<!\--/
 const conditionalComment = /^<!\[/
 
 // Special Elements (can contain anything)
+// 特殊元素（可以包含任何东西）
 export const isPlainTextElement = makeMap('script,style,textarea', true)
 const reCache = {}
 
@@ -67,7 +70,7 @@ export interface HTMLParserOptions extends CompilerOptions {
   chars?: (text: string, start?: number, end?: number) => void
   comment?: (content: string, start: number, end: number) => void
 }
-
+// 解析template模版
 export function parseHTML(html, options: HTMLParserOptions) {
   const stack: any[] = []
   const expectHTML = options.expectHTML
@@ -75,13 +78,18 @@ export function parseHTML(html, options: HTMLParserOptions) {
   const canBeLeftOpenTag = options.canBeLeftOpenTag || no
   let index = 0
   let last, lastTag
+  // 循环解析html模版
   while (html) {
     last = html
     // Make sure we're not in a plaintext content element like script/style
+    // 确保我们不在像script/style这样的纯文本内容元素中
     if (!lastTag || !isPlainTextElement(lastTag)) {
       let textEnd = html.indexOf('<')
+      log("#F06292", "/compiler/parser/html-parser.ts html解析,var(textEnd)",textEnd)
+      // 如何当前索引为0，肯定是一个标签（开始/结束标签）
       if (textEnd === 0) {
         // Comment:
+        // 对html中的注释做处理
         if (comment.test(html)) {
           const commentEnd = html.indexOf('-->')
 

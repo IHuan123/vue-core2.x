@@ -82,6 +82,7 @@ export function createASTElement(
 
 /**
  * Convert HTML string to AST.
+ * 将 HTML 字符串转换为 AST。
  */
 export function parse(template: string, options: CompilerOptions): ASTElement {
   warn = options.warn || baseWarn
@@ -403,7 +404,9 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
     },
     comment(text: string, start, end) {
       // adding anything as a sibling to the root node is forbidden
+      // 禁止将任何东西作为兄弟节点添加到根节点
       // comments should still be allowed, but ignored
+      // 注释仍然应该被允许，但被忽略
       if (currentParent) {
         const child: ASTText = {
           type: 3,
