@@ -8,6 +8,7 @@ type CompiledFunctionResult = {
   render: Function
   staticRenderFns: Array<Function>
 }
+// 将ast拼接的code通过new Function和with来生成render函数
 
 function createFunction(code, errors) {
   try {

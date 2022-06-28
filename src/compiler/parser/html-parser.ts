@@ -168,7 +168,7 @@ export function parseHTML(html, options: HTMLParserOptions) {
       if (text) {
         advance(text.length)
       }
-
+      // 处理文本内容
       if (options.chars && text) {
         options.chars(text, index - text.length, index)
       }

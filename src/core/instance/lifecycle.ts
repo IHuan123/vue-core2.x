@@ -136,12 +136,13 @@ export function lifecycleMixin(Vue: typeof Component) {
     }
   }
 }
+// 挂载函数
 export function mountComponent(
   vm: Component,
   el: Element | null | undefined,
   hydrating?: boolean
 ): Component {
-  vm.$el = el
+  vm.$el = el // 真实的元素
   // 如何配置中没有render就创建一个空的VNode的方法
   if (!vm.$options.render) {
     // @ts-expect-error invalid type
@@ -190,6 +191,8 @@ export function mountComponent(
     }
   } else {
     updateComponent = () => {
+      // vm._render：通过解析的render返回虚拟DOM 
+      // vm._upadte通过虚拟DOM创建真实的DOM
       vm._update(vm._render(), hydrating)
     }
   }
@@ -215,12 +218,14 @@ export function mountComponent(
   // 组件的挂载钩子），这依赖于已经定义的 vm._watcher
   // 整个应用该位置只会初始化一次
   log("#7C4DFF","instance.ts/lifecycle.ts method(mountComponent):","---->new Watcher")
+
+  // 渲染Watcher，每个组件都有一个watcher
   new Watcher(
     vm,
     updateComponent,
     noop,
     watcherOptions,
-    true /* isRenderWatcher */
+    true /* isRenderWatcher */ // true表示一个渲染的watcher 
   )
   hydrating = false
 

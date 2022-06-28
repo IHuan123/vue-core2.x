@@ -67,7 +67,7 @@ export default class Watcher implements DepTarget {
   constructor(
     vm: Component | null,
     expOrFn: string | (() => any),
-    cb: Function,
+    cb: Function, // 回调函数 一般用于vm.$watch
     options?: WatcherOptions | null,
     isRenderWatcher?: boolean
   ) {

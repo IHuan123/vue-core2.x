@@ -162,8 +162,8 @@ function initData(vm: Component) {
         )
     } else if (!isReserved(key)) { //校验key是否是使用$或者下划线进行定义的，因为vue中定义了很多的$data，$el等来直接操作vue对象。把所有的key都代理到vm的_data属性上面
       //此处的proxy代理和observe中的walk代理有什么区别？
-      //proxy代理的是将自定义的data中的所有属性定义到_data上，而walk中的Object.defineProperty则是针对data的值
-      proxy(vm, `_data`, key)
+      //proxy代理 将通过this.xxx来访问或者是设置值 代理到vm._data上
+      proxy(vm, `_data`, key) 
     }
   }
   // observe data 对data数据进行响应式处理

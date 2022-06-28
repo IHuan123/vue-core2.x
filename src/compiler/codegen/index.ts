@@ -13,7 +13,7 @@ import {
   ASTText,
   CompilerOptions
 } from 'types/compiler'
-
+import { log } from '../../core/util/debug'
 type TransformFunction = (el: ASTElement, code: string) => string
 type DataGenFunction = (el: ASTElement) => string
 type DirectiveFunction = (
@@ -58,7 +58,9 @@ export function generate(
   options: CompilerOptions
 ): CodegenResult {
   const state = new CodegenState(options)
+  log("#546E7A","codegen/index.ts 参数var(ast)抽象树：",ast)
   // fix #11483, Root level <script> tags should not be rendered.
+  // 修复 #11483，不应呈现根级 <script> 标签。
   const code = ast
     ? ast.tag === 'script'
       ? 'null'
