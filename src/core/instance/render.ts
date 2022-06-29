@@ -92,7 +92,7 @@ export function setCurrentRenderingInstance(vm: Component) {
 
 export function renderMixin(Vue: typeof Component) {
   // install runtime convenience helpers 安装运行时便利助手
-  // 生成的render函数中需要的各种渲染函数
+  // installRenderHelpers ：生成的render函数中需要的各种渲染函数，如_c、_v、_s等函数，应用于生成的render函数模版中
   installRenderHelpers(Vue.prototype)
 
   Vue.prototype.$nextTick = function (fn: (...args: any[]) => any) {

@@ -36,7 +36,7 @@ export interface WatcherOptions extends DebuggerOptions {
  * A watcher parses an expression, collects dependencies,
  * and fires callback when the expression value changes.
  * This is used for both the $watch() api and directives.
- * * 观察者解析表达式，收集依赖关系，并在表达式值更改时触发回调。 这用于 $watch() api 和指令。
+ * 观察者解析表达式，收集依赖关系，并在表达式值更改时触发回调。 这用于 $watch() api 和指令。
  * @internal
  */
 export default class Watcher implements DepTarget {
@@ -101,7 +101,8 @@ export default class Watcher implements DepTarget {
     this.newDepIds = new Set()
     this.expression = __DEV__ ? expOrFn.toString() : ''
     // parse expression for getter
-    console.log("expOrFn",expOrFn)
+    // console.log("expOrFn",expOrFn)
+    // expOrFn：就是lifecycle中的updateComponent = ()=>vm._update(vm._render(),hydrating)
     if (isFunction(expOrFn)) {
       this.getter = expOrFn
     } else {
@@ -118,7 +119,7 @@ export default class Watcher implements DepTarget {
       }
     }
     // 初始化watcher获取data数据
-    this.value = this.lazy ? undefined : this.get()
+    this.value = this.lazy ? undefined : this.get() //调用get方法就会执行this.getter(updateComponent方法)，就会渲染页面
   }
 
   /**
@@ -126,11 +127,11 @@ export default class Watcher implements DepTarget {
    */
   get() {
     console.log("observer/watcher.ts method(get)")
-    pushTarget(this)
+    pushTarget(this) // 在执行get前先将当前watcher存起来
     let value
     const vm = this.vm
     try {
-      value = this.getter.call(vm, vm)
+      value = this.getter.call(vm, vm) //渲染watcher执行
       
     } catch (e: any) {
       if (this.user) {
@@ -144,7 +145,7 @@ export default class Watcher implements DepTarget {
       if (this.deep) {
         traverse(value)
       }
-      // 弹出target防止data上每个属性都产生依赖，只有页面上使用的变量需要依赖
+      // 当执行完当前函数就将此次的watcher移除掉(popTarget移除最后一个依赖)
       popTarget()
       this.cleanupDeps()
     }
@@ -159,15 +160,16 @@ export default class Watcher implements DepTarget {
     const id = dep.id
     if (!this.newDepIds.has(id)) {
       this.newDepIds.add(id)
-      this.newDeps.push(dep)
+      this.newDeps.push(dep) //在watcher中添加dep
       if (!this.depIds.has(id)) {
-        dep.addSub(this)
+        dep.addSub(this) //在dep subs数组中存入watcher
       }
     }
   }
 
   /**
    * Clean up for dependency collection.
+   * 清理依赖项收集。
    */
   cleanupDeps() {
     let i = this.deps.length
@@ -190,15 +192,17 @@ export default class Watcher implements DepTarget {
   /**
    * Subscriber interface.
    * Will be called when a dependency changes.
+   * * 订阅者界面。 * 将在依赖项更改时调用。
    */
   update() {
+    console.log("66666666666666666666666666666666666666666666666666666666666666")
     /* istanbul ignore else */
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {
       this.run()
     } else {
-      queueWatcher(this)
+      queueWatcher(this) 
     }
   }
 
@@ -257,6 +261,7 @@ export default class Watcher implements DepTarget {
 
   /**
    * Remove self from all dependencies' subscriber list.
+   * 从所有依赖项的订阅者列表中删除 self。
    */
   teardown() {
     if (this.vm && !this.vm._isBeingDestroyed) {

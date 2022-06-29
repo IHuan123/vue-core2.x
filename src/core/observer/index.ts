@@ -49,8 +49,9 @@ export class Observer {
 
   constructor(public value: any, public shallow = false) {
     // this.value = value
-    //创建依赖收集的容器
-    this.dep = new Dep()
+    // 如果给一个对象添加一个不存在的属性，我希望也能更新视图{}.dep
+    //创建依赖收集的容器，给对象和数组都增加dep属性
+    this.dep = new Dep() 
     log("#BA68C8","observer/index.ts var(dep):",this.dep)
     this.vmCount = 0
     //设置一个__ob__属性引用当前observer实例，为每一个监控的属性都添加一个——__ob__
@@ -162,7 +163,7 @@ export function defineReactive(
   customSetter?: Function | null,
   shallow?: boolean
 ) {
-  //和Key一一对应
+  //和Key一一对应，这个dep是专门给对象使用的
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -179,15 +180,14 @@ export function defineReactive(
   ) {
     val = obj[key]
   }
-  //childOb,属性拦截，只要是对象类型都会返回childobj 递归遍历
+  //childOb是子集的Observer实例
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter() {
       const value = getter ? getter.call(obj) : val
-      //如果存在依赖
-      if (Dep.target) {
+      if (Dep.target) { //如果存在watcher依赖
         //依赖收集(__DEV__开发模式 一般不看)
         if (__DEV__) {
           dep.depend({
@@ -196,13 +196,15 @@ export function defineReactive(
             key
           })
         } else {
-          dep.depend()
+          //每个属性都对应着自己的一个watcher
+          // dep.depend可以储存watcher
+          dep.depend() 
         }
         if (childOb) {
           //如果存在子obj，子obj也收集这个依赖？为什么要这么做？作用：Obj和父变了和子改变了都会通知进行更新。例：在访问时{obj.foo}无论是Obj变了还是obj.foo的值变了都会通知进行更新。
-          childOb.dep.depend()
-          if (isArray(value)) {
-            dependArray(value)
+          childOb.dep.depend() // 让数组和对象也记住当前的watcher
+          if (isArray(value)) { // 可能是数组套数组的可能
+            dependArray(value)  
           }
         }
       }
@@ -228,7 +230,8 @@ export function defineReactive(
       } else {
         val = newVal
       }
-      childOb = !shallow && observe(newVal)
+      //当设置的值是一个对象或者数组时，再次进行数据拦截
+      childOb = !shallow && observe(newVal) 
       if (__DEV__) {
         dep.notify({
           type: TriggerOpTypes.SET,
@@ -238,7 +241,7 @@ export function defineReactive(
           oldValue: value
         })
       } else {
-        dep.notify()
+        dep.notify() // 通知依赖watcher进行一个更新操作
       }
     }
   })
@@ -354,6 +357,8 @@ export function del(target: any[] | object, key: any) {
 /**
  * Collect dependencies on array elements when the array is touched, since
  * we cannot intercept array element access like property getters.
+ * 收集数组的watcher
+ * 处理嵌套数组的watcher依赖收集
  */
 function dependArray(value: Array<any>) {
   for (let e, i = 0, l = value.length; i < l; i++) {

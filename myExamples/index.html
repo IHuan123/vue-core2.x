@@ -62,18 +62,24 @@
           { value: 2, key: 2 },
           { value: 3, key: 3 },
           { value: 4, key: 4 }
-        ]
+        ],
+        obj:{name:"ob test"}
       },
       computed: {
         // message(){
         //   return "this is computed message"
         // }
+        msg(){
+          return "this is computed message"
+        }
       },
       mounted() {
         console.log('####################### mounted')
       },
       methods: {
         add() {
+          this.count++
+          this.count++
           this.count++
         },
         addList() {

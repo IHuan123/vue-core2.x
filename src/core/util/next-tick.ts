@@ -6,9 +6,10 @@ import { isIE, isIOS, isNative } from './env'
 
 export let isUsingMicroTask = false
 
-const callbacks: Array<Function> = []
-let pending = false
+const callbacks: Array<Function> = [] // 存放回调函数的数组
+let pending = false //当前nextTick执行的状态
 
+//最后将callbacks中的所有回调统一执行
 function flushCallbacks() {
   pending = false
   const copies = callbacks.slice(0)
@@ -29,7 +30,19 @@ function flushCallbacks() {
 // where microtasks have too high a priority and fire in between supposedly
 // sequential events (e.g. #4521, #6690, which have workarounds)
 // or even between bubbling of the same event (#6566).
-let timerFunc
+// 这里我们有使用微任务的异步延迟包装器。 
+// 在 2.5 中，我们使用（宏）任务（结合微任务）。 
+// 然而，当状态在重绘之前改变时，它有一些微妙的问题 
+//（例如#6813，out-in 转换）。 
+// 此外，在事件处理程序中使用（宏）任务会导致一些奇怪的行为 
+// 这是无法规避的（例如 #7109、#7153、#7546、#7834、#8109）。 
+// 所以我们现在再次在任何地方使用微任务。 
+// 这种权衡的一个主要缺点是，在某些情况下 
+// 微任务的优先级太高并在假定的 
+// 顺序事件之间触发 
+// 或者甚至在冒泡之间触发同一事件 (#6566)。
+
+let timerFunc //异步执行函数
 
 // The nextTick behavior leverages the microtask queue, which can be accessed
 // via either native Promise.then or MutationObserver.
@@ -38,6 +51,8 @@ let timerFunc
 // completely stops working after triggering a few times... so, if native
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
+
+//这里是为了处理不同浏览器对promise、setTimeout等异步函数的兼容处理。
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
   const p = Promise.resolve()
   timerFunc = () => {
@@ -84,7 +99,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
     setTimeout(flushCallbacks, 0)
   }
 }
-
+// 用于异步执行
 export function nextTick(): Promise<void>
 export function nextTick(cb: (...args: any[]) => any, ctx?: object): void
 /**
@@ -92,6 +107,7 @@ export function nextTick(cb: (...args: any[]) => any, ctx?: object): void
  */
 export function nextTick(cb?: (...args: any[]) => any, ctx?: object) {
   let _resolve
+  // 通过pending来判断当前执行状态，多次调用nextTick 如何没有刷新的时候，就将回调函数push到数组中，等待统一异步执行
   callbacks.push(() => {
     if (cb) {
       try {
@@ -103,6 +119,7 @@ export function nextTick(cb?: (...args: any[]) => any, ctx?: object) {
       _resolve(ctx)
     }
   })
+  
   if (!pending) {
     pending = true
     timerFunc()

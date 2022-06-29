@@ -170,8 +170,9 @@ export function mountComponent(
       }
     }
   }
+  // 虚拟dom挂载之前执行
   callHook(vm, 'beforeMount')
-  // 定义更新组件方法
+  // 定义更新组件方法, 
   let updateComponent
   /* istanbul ignore if */
   if (__DEV__ && config.performance && mark) {
@@ -192,7 +193,7 @@ export function mountComponent(
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
-    //渲染页面
+    //渲染页面，除了初次渲染，在每次依赖的数据发生变化时就会执行当前函数，并且会执行beforreUpdate和updated两个生命周期函数
     updateComponent = () => {
       // vm._render 在render.ts 的renderMixin方法中混入的方法
       // vm._render：通过解析的render方法 返回虚拟DOM _c _v _s 
@@ -205,7 +206,7 @@ export function mountComponent(
   const watcherOptions: WatcherOptions = {
     before() {
       if (vm._isMounted && !vm._isDestroyed) {
-        callHook(vm, 'beforeUpdate')
+        callHook(vm, 'beforeUpdate') // 数据更新前执行
       }
     }
   }
@@ -246,6 +247,7 @@ export function mountComponent(
       }
     }
     vm._isMounted = true
+    // 虚拟dom已经渲染为真实dom并挂载到页面上
     callHook(vm, 'mounted')
   }
   return vm

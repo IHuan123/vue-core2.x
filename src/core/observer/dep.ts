@@ -1,6 +1,7 @@
 // 初始化 data 属性时，递归给 data 的属性，重写 get set，同时会给它们身上都添加一个 Dep 类，
 
 // 渲染阶段 Dep 类会收集 watcher 。每次修改数据会调用 dep.notify() 更新视图
+// dep和watcher的关系，一个dep可能对应多个watcher，一个watcher也可能对应多个dep
 import { remove } from '../util/index'
 import config from '../config'
 import { log } from '../util/debug'
@@ -25,8 +26,8 @@ export interface DepTarget extends DebuggerOptions {
  */
 export default class Dep {
   static target?: DepTarget | null
-  id: number
-  subs: Array<DepTarget>
+  id: number //标记当前dep
+  subs: Array<DepTarget> //订阅者列表
 
   constructor() {
     this.id = uid++
@@ -34,7 +35,7 @@ export default class Dep {
   }
   //给 dep 添加对应的 watch
   addSub(sub: DepTarget) {
-    this.subs.push(sub)
+    this.subs.push(sub) //观察者模式
   }
 
   removeSub(sub: DepTarget) {
@@ -45,6 +46,7 @@ export default class Dep {
     log("#039BE5","observe/dep.ts method(depend)>variable(Dep.target & this):",Dep.target, this)
     // 存在依赖才收集
     if (Dep.target) {
+      // 让当前watcher记住这个dep
       Dep.target.addDep(this)
       if (__DEV__ && info && Dep.target.onTrack) {
         Dep.target.onTrack({
@@ -83,17 +85,17 @@ export default class Dep {
 // This is globally unique because only one watcher
 // can be evaluated at a time.
 // 当前正在评估的目标观察者。这是全局唯一的，因为一次只能评估一个观察者一次。
-
-Dep.target = null
-const targetStack: Array<DepTarget | null | undefined> = []
-// 渲染阶段，访问页面上的属性变量时，给对应的 Dep 添加 watcher
+// Dep的静态属性target
+Dep.target = null // 用于缓存当前使用的一个watcher依赖
+const targetStack: Array<DepTarget | null | undefined> = [] //用于存放watcher的一个栈，一个数组
+// 渲染阶段，访问页面上的属性变量时，添加 watcher
 // target参数传入的就是Watcher实例
 export function pushTarget(target?: DepTarget | null) {
-  targetStack.push(target)
+  targetStack.push(target) //
   Dep.target = target
 }
 // 访问结束后删除
 export function popTarget() {
   targetStack.pop()
-  Dep.target = targetStack[targetStack.length - 1]
+  Dep.target = targetStack[targetStack.length - 1] 
 }

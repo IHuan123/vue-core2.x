@@ -18,6 +18,7 @@ let index = 0
 
 /**
  * Reset the scheduler's state.
+ * 清空queue和activatedChildren中的数据
  */
 function resetSchedulerState() {
   index = queue.length = activatedChildren.length = 0
@@ -60,7 +61,7 @@ if (inBrowser && !isIE) {
 }
 
 /**
- * Flush both queues and run the watchers.
+ * Flush both queues and run the watchers. 刷新两个队列并运行观察者。
  */
 function flushSchedulerQueue() {
   currentFlushTimestamp = getNow()
@@ -126,7 +127,7 @@ function callUpdatedHooks(queue: Watcher[]) {
     const watcher = queue[i]
     const vm = watcher.vm
     if (vm && vm._watcher === watcher && vm._isMounted && !vm._isDestroyed) {
-      callHook(vm, 'updated')
+      callHook(vm, 'updated') //更新完成
     }
   }
 }
@@ -153,10 +154,11 @@ function callActivatedHooks(queue) {
  * Push a watcher into the watcher queue.
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
+ * 将观察者推入观察者队列。 具有重复 ID 的作业将被跳过，除非它在队列被刷新时被推送。
  */
 export function queueWatcher(watcher: Watcher) {
   const id = watcher.id
-  if (has[id] != null) {
+  if (has[id] != null) { //保证同一个watcher中的update多次执行的情况下也只执行一次nextTick
     return
   }
 
@@ -170,6 +172,7 @@ export function queueWatcher(watcher: Watcher) {
   } else {
     // if already flushing, splice the watcher based on its id
     // if already past its id, it will be run next immediately.
+    // 如果已经刷新，则根据它的 id 拼接观察者 // 如果已经超过它的 id，它将立即运行下一个。
     let i = queue.length - 1
     while (i > index && queue[i].id > watcher.id) {
       i--
