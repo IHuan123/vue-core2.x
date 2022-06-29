@@ -13,7 +13,7 @@ export default class VNode {
   elm: Node | undefined
   ns?: string
   context?: Component // rendered in this component's scope
-  key: string | number | undefined
+  key: string | number | undefined // 节点唯一标识
   componentOptions?: VNodeComponentOptions
   componentInstance?: Component // component instance
   parent: VNode | undefined | null // component placeholder node
@@ -76,6 +76,7 @@ export default class VNode {
   }
 }
 
+//创建一个空的虚拟DOM
 export const createEmptyVNode = (text: string = '') => {
   const node = new VNode()
   node.text = text
@@ -83,6 +84,7 @@ export const createEmptyVNode = (text: string = '') => {
   return node
 }
 
+// 创建文本节点
 export function createTextVNode(val: string | number) {
   return new VNode(undefined, undefined, undefined, String(val))
 }
@@ -91,6 +93,7 @@ export function createTextVNode(val: string | number) {
 // used for static nodes and slot nodes because they may be reused across
 // multiple renders, cloning them avoids errors when DOM manipulations rely
 // on their elm reference.
+// 克隆一个虚拟dom
 export function cloneVNode(vnode: VNode): VNode {
   const cloned = new VNode(
     vnode.tag,
