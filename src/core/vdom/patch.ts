@@ -118,6 +118,7 @@ export function createPatchFunction(backend) {
 
   let creatingElmInVPre = 0
 
+  // 根据虚拟dom创建真实dom
   function createElm(
     vnode,
     insertedVnodeQueue,
@@ -809,6 +810,7 @@ export function createPatchFunction(backend) {
 
     if (isUndef(oldVnode)) {
       // empty mount (likely as component), create new root element
+      // 空挂载（可能作为组件），创建新的根元素
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue)
     } else {

@@ -24,6 +24,9 @@ const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
+// 用于提供更灵活接口的包装函数 // 不会被流量大喊大叫
+// h函数的options项{on:{...},style:{...}}等
+// 结果也是返回虚拟DOM
 export function createElement(
   context: Component,
   tag: any,

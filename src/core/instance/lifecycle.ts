@@ -59,6 +59,7 @@ export function initLifecycle(vm: Component) {
 }
 
 export function lifecycleMixin(Vue: typeof Component) {
+  // _update通过虚拟节点渲染出真实的DOM
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
@@ -68,6 +69,7 @@ export function lifecycleMixin(Vue: typeof Component) {
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
     // Vue.prototype.__patch__ 基于所使用的渲染后端注入入口点。
+    // 通过调用patch函数将虚拟dom转为真实dom并替换掉根节点vm.$el
     if (!prevVnode) {
       // initial render
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)

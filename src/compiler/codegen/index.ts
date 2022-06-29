@@ -64,14 +64,14 @@ export function generate(
   const code = ast
     ? ast.tag === 'script'
       ? 'null'
-      : genElement(ast, state)
+      : genElement(ast, state) // 通过genElement来生成render函数中的内容
     : '_c("div")'
   return {
-    render: `with(this){return ${code}}`,
+    render: `with(this){return ${code}}`, // 通过with来做模版引擎
     staticRenderFns: state.staticRenderFns
   }
 }
-// 生成字符串
+// 生成表达式字符串
 export function genElement(el: ASTElement, state: CodegenState): string {
   if (el.parent) {
     el.pre = el.pre || el.parent.pre
