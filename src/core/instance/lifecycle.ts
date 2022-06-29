@@ -190,8 +190,11 @@ export function mountComponent(
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
+    //渲染页面
     updateComponent = () => {
-      // vm._render：通过解析的render返回虚拟DOM 
+      // vm._render 在render.ts 的renderMixin方法中混入的方法
+      // vm._render：通过解析的render方法 返回虚拟DOM _c _v _s 
+      // vm._update是在lifecycleMixin方法中混入
       // vm._upadte通过虚拟DOM创建真实的DOM
       vm._update(vm._render(), hydrating)
     }
