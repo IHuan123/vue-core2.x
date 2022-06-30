@@ -19,11 +19,15 @@ export function initAssetRegisters(Vue: GlobalAPI) {
         if (__DEV__ && type === 'component') {
           validateComponentName(id)
         }
+        // 注册组件
         if (type === 'component' && isPlainObject(definition)) {
           // @ts-expect-error
           definition.name = definition.name || id
+          // 当前this就是Vue本身
+          // 通过调用Vue.extend （this.options._base.extend就是Vue.extend），来创建一个继承Vue的构造函数
           definition = this.options._base.extend(definition)
         }
+        // 注册自定义指令
         if (type === 'directive' && isFunction(definition)) {
           definition = { bind: definition, update: definition }
         }
