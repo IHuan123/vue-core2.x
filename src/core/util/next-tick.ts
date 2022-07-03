@@ -106,8 +106,10 @@ export function nextTick(cb: (...args: any[]) => any, ctx?: object): void
  * @internal
  */
 export function nextTick(cb?: (...args: any[]) => any, ctx?: object) {
+  console.log("++++++++++++++++++++++++++++++++++++++++++++++ nextTick")
   let _resolve
   // 通过pending来判断当前执行状态，多次调用nextTick 如何没有刷新的时候，就将回调函数push到数组中，等待统一异步执行
+  // callbacks 中包括用this.$nextTick加入的,还有watcher中加入的
   callbacks.push(() => {
     if (cb) {
       try {
@@ -125,7 +127,7 @@ export function nextTick(cb?: (...args: any[]) => any, ctx?: object) {
     timerFunc()
   }
   // $flow-disable-line
-  if (!cb && typeof Promise !== 'undefined') {
+  if (!cb && typeof Promise !== 'undefined') { // 如何没有回调函数，直接返回一个Promise
     return new Promise(resolve => {
       _resolve = resolve
     })

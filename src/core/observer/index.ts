@@ -50,7 +50,7 @@ export class Observer {
   constructor(public value: any, public shallow = false) {
     // this.value = value
     // 如果给一个对象添加一个不存在的属性，我希望也能更新视图{}.dep
-    //创建依赖收集的容器，给对象和数组都增加dep属性
+    // 创建依赖收集的容器，给对象和数组都增加dep属性
     this.dep = new Dep() 
     log("#BA68C8","observer/index.ts var(dep):",this.dep)
     this.vmCount = 0
@@ -134,6 +134,7 @@ function copyAugment(target: Object, src: Object, keys: Array<string>) {
  */
 export function observe(value: any, shallow?: boolean): Observer | void {
   // log("#BA68C8","observer params value:",value)
+  // 判断value类型
   if (!isObject(value) || isRef(value) || value instanceof VNode) {
     return
   }

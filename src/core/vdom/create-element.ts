@@ -94,7 +94,7 @@ export function _createElement(
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)
-    if (config.isReservedTag(tag)) {
+    if (config.isReservedTag(tag)) { // 判断是否是原始标签
       // platform built-in elements
       if (
         __DEV__ &&
@@ -115,7 +115,7 @@ export function _createElement(
         undefined,
         context
       )
-    } else if (
+    } else if ( //判断是否是组件
       (!data || !data.pre) &&
       isDef((Ctor = resolveAsset(context.$options, 'components', tag)))
     ) {
@@ -125,6 +125,7 @@ export function _createElement(
       // unknown or unlisted namespaced elements
       // check at runtime because it may get assigned a namespace when its
       // parent normalizes children
+      // 未知或未列出的命名空间元素 // 在运行时检查，因为当它的父级规范化子级时，它可能会被分配一个命名空间
       vnode = new VNode(tag, data, children, undefined, undefined, context)
     }
   } else {

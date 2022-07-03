@@ -206,7 +206,7 @@ export function mountComponent(
   const watcherOptions: WatcherOptions = {
     before() {
       if (vm._isMounted && !vm._isDestroyed) {
-        callHook(vm, 'beforeUpdate') // 数据更新前执行
+        callHook(vm, 'beforeUpdate') // 数据更新前执行，生命周期钩子函数
       }
     }
   }

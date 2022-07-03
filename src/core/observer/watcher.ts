@@ -83,7 +83,7 @@ export default class Watcher implements DepTarget {
       this.user = !!options.user
       this.lazy = !!options.lazy
       this.sync = !!options.sync
-      this.before = options.before
+      this.before = options.before //beforeUpdate调用
       if (__DEV__) {
         this.onTrack = options.onTrack
         this.onTrigger = options.onTrigger
@@ -102,7 +102,7 @@ export default class Watcher implements DepTarget {
     this.expression = __DEV__ ? expOrFn.toString() : ''
     // parse expression for getter
     // console.log("expOrFn",expOrFn)
-    // expOrFn：就是lifecycle中的updateComponent = ()=>vm._update(vm._render(),hydrating)
+    // expOrFn：就是lifecycle中的updateComponent = ()=>vm._update(vm._render(),hydrating) ，该函数执行可以更新dom
     if (isFunction(expOrFn)) {
       this.getter = expOrFn
     } else {
@@ -159,7 +159,7 @@ export default class Watcher implements DepTarget {
   addDep(dep: Dep) {
     const id = dep.id
     if (!this.newDepIds.has(id)) {
-      this.newDepIds.add(id)
+      this.newDepIds.add(id) // 标记当前dep Id，防止重复添加
       this.newDeps.push(dep) //在watcher中添加dep
       if (!this.depIds.has(id)) {
         dep.addSub(this) //在dep subs数组中存入watcher
@@ -195,14 +195,14 @@ export default class Watcher implements DepTarget {
    * * 订阅者界面。 * 将在依赖项更改时调用。
    */
   update() {
-    console.log("66666666666666666666666666666666666666666666666666666666666666")
+    console.log("66666666666666666666666666666666666666666666666666666666666666 watcher.update执行")
     /* istanbul ignore else */
-    if (this.lazy) {
+    if (this.lazy) { // 懒加载
       this.dirty = true
     } else if (this.sync) {
-      this.run()
+      this.run() // 同步更新
     } else {
-      queueWatcher(this) 
+      queueWatcher(this)  // 异步更新，通过nextTick方法实现
     }
   }
 

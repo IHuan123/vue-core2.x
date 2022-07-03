@@ -81,6 +81,7 @@ function mergeData(
 
 /**
  * Data
+ * 合并data，并返回一个函数，这个函数放回当前组件的data
  */
 export function mergeDataOrFn(
   parentVal: any,
@@ -181,6 +182,7 @@ LIFECYCLE_HOOKS.forEach(hook => {
  * When a vm is present (instance creation), we need to do
  * a three-way merge between constructor options, instance
  * options and parent options.
+ * * 当 vm 存在时（创建实例），我们需要 * 在构造函数选项、实例 * 选项和父选项之间进行三向合并。
  */
 function mergeAssets(
   parentVal: Object | null,
@@ -239,6 +241,7 @@ strats.watch = function (
 
 /**
  * Other object hashes. 其他对象哈希。
+ * props、methods、inject、computed的合并处理
  */
 strats.props =
   strats.methods =

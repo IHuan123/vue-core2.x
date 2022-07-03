@@ -8,9 +8,9 @@ import type { Component } from 'types/component'
 
 export const MAX_UPDATE_COUNT = 100
 
-const queue: Array<Watcher> = []
+const queue: Array<Watcher> = [] // watcher队列
 const activatedChildren: Array<Component> = []
-let has: { [key: number]: true | undefined | null } = {}
+let has: { [key: number]: true | undefined | null } = {} // 标记队列中watcher Id
 let circular: { [key: number]: number } = {}
 let waiting = false
 let flushing = false
@@ -80,10 +80,11 @@ function flushSchedulerQueue() {
 
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
+  // 遍历执行队列中的watcher更新方法
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
     if (watcher.before) {
-      watcher.before()
+      watcher.before() // 执行beforeUpdate钩子函数
     }
     id = watcher.id
     has[id] = null
@@ -168,7 +169,7 @@ export function queueWatcher(watcher: Watcher) {
 
   has[id] = true
   if (!flushing) {
-    queue.push(watcher)
+    queue.push(watcher) //将当前watcher添加到异步更新队列中
   } else {
     // if already flushing, splice the watcher based on its id
     // if already past its id, it will be run next immediately.
@@ -187,6 +188,7 @@ export function queueWatcher(watcher: Watcher) {
       flushSchedulerQueue()
       return
     }
+    console.log("++++++++++++++++++++++++++++++++++++++++++++ queueWatcher")
     nextTick(flushSchedulerQueue)
   }
 }

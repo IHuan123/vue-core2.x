@@ -1,3 +1,4 @@
+// 封装创建真实dom的方法
 import VNode from 'core/vdom/vnode'
 import { namespaceMap } from 'web/util/index'
 

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>component</title>
+    <script src="../dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <component-a></component-a>
+    </div>
+</body>
+
+</html>
+<script>
+    // const ex = Vue.extend({
+    //     data(){
+    //         return {test:"extend"}
+    //     },
+    //     filters:{
+    //         capitalize: function (value) {
+    //             if (!value) return ''
+    //             value = value.toString()
+    //             return value.charAt(0).toUpperCase() + value.slice(1)
+    //         }
+    //     }
+    // })
+    // 可以在new Vue中直接写el，或者new Vue().$mount(id)
+    var ComponentA = {
+        name:"global-component-a",
+        template: "<i @click='f'>custom Component{{test}}</i>",
+        data() {
+            return { test: "name" }
+        },
+        methods: {
+            f() {
+                this.test = "lilei"
+            }
+        }
+    }
+
+    Vue.component("component-a", ComponentA)
+
+    const vm = new Vue({
+        el: document.getElementById('root'),
+        components:{'component-a':{
+            name:"local-component-a",
+            template: "<div>this is inner component</div>",
+        }},
+        data: {
+
+        }
+    })
+    console.log(vm)
+    // .$mount("#root")
+
+
+</script>

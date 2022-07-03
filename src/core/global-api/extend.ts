@@ -86,7 +86,7 @@ export function initExtend(Vue: GlobalAPI) {
 function initProps(Comp: typeof Component) {
   const props = Comp.options.props
   for (const key in props) {
-    proxy(Comp.prototype, `_props`, key)
+    proxy(Comp.prototype, `_props`, key) 
   }
 }
 
