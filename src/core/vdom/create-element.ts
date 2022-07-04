@@ -18,7 +18,7 @@ import {
 import { normalizeChildren, simpleNormalizeChildren } from './helpers/index'
 import type { Component } from 'types/component'
 import type { VNodeData } from 'types/vnode'
-
+import { log } from "core/util/index"
 const SIMPLE_NORMALIZE = 1
 const ALWAYS_NORMALIZE = 2
 
@@ -91,6 +91,7 @@ export function _createElement(
     children = simpleNormalizeChildren(children)
   }
   let vnode, ns
+  log("#795548","create-element.ts method(_createElement) 当前标签名tag为：", tag)
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)

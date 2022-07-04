@@ -11,6 +11,7 @@
 
 <body>
     <div id="root">
+        <span id="custom">123</span>
         <component-a></component-a>
     </div>
 </body>
@@ -31,7 +32,7 @@
     // })
     // 可以在new Vue中直接写el，或者new Vue().$mount(id)
     var ComponentA = {
-        name:"global-component-a",
+        // name:"global-component-a",
         template: "<i @click='f'>custom Component{{test}}</i>",
         data() {
             return { test: "name" }
@@ -49,7 +50,7 @@
         el: document.getElementById('root'),
         components:{'component-a':{
             name:"local-component-a",
-            template: "<div>this is inner component</div>",
+            template:`<div style='color:red' :style='{ background:"green"}'>this is inner component</div>`,
         }},
         data: {
 

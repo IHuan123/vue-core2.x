@@ -185,7 +185,7 @@ export function createPatchFunction(backend) {
       insert(parentElm, vnode.elm, refElm)
     }
   }
-
+  // 创建组件
   function createComponent(vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
     if (isDef(i)) {
@@ -411,7 +411,7 @@ export function createPatchFunction(backend) {
       removeNode(vnode.elm)
     }
   }
-
+  // vnode diff算法
   function updateChildren(
     parentElm,
     oldCh,
@@ -591,6 +591,7 @@ export function createPatchFunction(backend) {
     index,
     removeOnly?: any
   ) {
+    // 对比新旧vnode，如果一样就不做任何改变
     if (oldVnode === vnode) {
       return
     }
@@ -615,6 +616,7 @@ export function createPatchFunction(backend) {
     // note we only do this if the vnode is cloned -
     // if the new node is not cloned it means the render functions have been
     // reset by the hot-reload-api and we need to do a proper re-render.
+    // 为静态树重用元素。 // 注意我们只有在 vnode 被克隆时才会这样做 - // 如果新节点没有被克隆，这意味着渲染函数已经被 hot-reload-api // 重置，我们需要进行适当的重新渲染。
     if (
       isTrue(vnode.isStatic) &&
       isTrue(oldVnode.isStatic) &&
@@ -680,6 +682,7 @@ export function createPatchFunction(backend) {
   const isRenderedModule = makeMap('attrs,class,staticClass,staticStyle,key')
 
   // Note: this is a browser-only function so we can assume elms are DOM nodes.
+  // 这是一个仅限浏览器的功能，因此我们可以假设 elms 是 DOM 节点。
   function hydrate(elm, vnode, insertedVnodeQueue, inVPre?: boolean) {
     let i
     const { tag, data, children } = vnode
@@ -815,9 +818,13 @@ export function createPatchFunction(backend) {
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue)
     } else {
+      // isRealElement 表示是否是真实Element
       const isRealElement = isDef(oldVnode.nodeType)
+
+      // 当老节点不是真实的 dom 节点， 当两个节点是相同节点的时候，进入 patctVnode 的过程
+      // 而 patchVnode 也是 传说中 diff updateChildren 的调用者
       if (!isRealElement && sameVnode(oldVnode, vnode)) {
-        // patch existing root node
+        // patch existing root node 修补现有根节点
         patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)
       } else {
         if (isRealElement) {
@@ -863,6 +870,10 @@ export function createPatchFunction(backend) {
         )
 
         // update parent placeholder node element, recursively
+
+        // 递归 更新父占位符元素
+        // 就是执行一遍 父节点的 destory 和 create 、insert 的 钩子函数
+        // 类似于 style 组件，事件组件，这些 钩子函数
         if (isDef(vnode.parent)) {
           let ancestor = vnode.parent
           const patchable = isPatchable(vnode)
@@ -893,15 +904,18 @@ export function createPatchFunction(backend) {
         }
 
         // destroy old node
+        // 销毁老节点
         if (isDef(parentElm)) {
           removeVnodes([oldVnode], 0, 0)
         } else if (isDef(oldVnode.tag)) {
+          // 触发老节点 的 destory 钩子
           invokeDestroyHook(oldVnode)
         }
       }
     }
-
+  // 执行 虚拟 dom 的 insert 钩子函数
     invokeInsertHook(vnode, insertedVnodeQueue, isInitialPatch)
+    // 返回最新 vnode 的 elm ，也就是真实的 dom节点
     return vnode.elm
   }
 }
