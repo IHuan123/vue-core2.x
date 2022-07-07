@@ -75,7 +75,7 @@ export function initState(vm: Component) {
 
 function initProps(vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
-  const props = (vm._props = {})
+  const props = (vm._props = {}) // 缓存props
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
   const keys: string[] = (vm.$options._propKeys = [])

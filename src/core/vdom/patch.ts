@@ -32,7 +32,7 @@ import {
 export const emptyNode = new VNode('', {}, [])
 
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
-
+// 对比两个node是否相同
 function sameVnode(a, b) {
   return (
     a.key === b.key &&
@@ -44,7 +44,7 @@ function sameVnode(a, b) {
       (isTrue(a.isAsyncPlaceholder) && isUndef(b.asyncFactory.error)))
   )
 }
-
+// 如果是表单 比对两个表单是否相同
 function sameInputType(a, b) {
   if (a.tag !== 'input') return true
   let i
@@ -419,12 +419,14 @@ export function createPatchFunction(backend) {
     insertedVnodeQueue,
     removeOnly
   ) {
-    let oldStartIdx = 0
-    let newStartIdx = 0
-    let oldEndIdx = oldCh.length - 1
+    // 双指针对比
+    // 创建4个指针
+    let oldStartIdx = 0 // 开始指针
+    let newStartIdx = 0 // 开始指针
+    let oldEndIdx = oldCh.length - 1 // 结束指针
     let oldStartVnode = oldCh[0]
     let oldEndVnode = oldCh[oldEndIdx]
-    let newEndIdx = newCh.length - 1
+    let newEndIdx = newCh.length - 1 // 结束指针
     let newStartVnode = newCh[0]
     let newEndVnode = newCh[newEndIdx]
     let oldKeyToIdx, idxInOld, vnodeToMove, refElm
@@ -443,7 +445,7 @@ export function createPatchFunction(backend) {
         oldStartVnode = oldCh[++oldStartIdx] // Vnode has been moved left
       } else if (isUndef(oldEndVnode)) {
         oldEndVnode = oldCh[--oldEndIdx]
-      } else if (sameVnode(oldStartVnode, newStartVnode)) {
+      } else if (sameVnode(oldStartVnode, newStartVnode)) { // 优化尾部插入的情况：如何新旧vnode第一个node相同
         patchVnode(
           oldStartVnode,
           newStartVnode,
@@ -453,7 +455,7 @@ export function createPatchFunction(backend) {
         )
         oldStartVnode = oldCh[++oldStartIdx]
         newStartVnode = newCh[++newStartIdx]
-      } else if (sameVnode(oldEndVnode, newEndVnode)) {
+      } else if (sameVnode(oldEndVnode, newEndVnode)) { // 优化开头插入：如何新旧vnode最后node相同
         patchVnode(
           oldEndVnode,
           newEndVnode,
@@ -633,8 +635,8 @@ export function createPatchFunction(backend) {
       i(oldVnode, vnode)
     }
 
-    const oldCh = oldVnode.children
-    const ch = vnode.children
+    const oldCh = oldVnode.children // 旧的虚拟dom
+    const ch = vnode.children // 新的虚拟dom
     if (isDef(data) && isPatchable(vnode)) {
       for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
       if (isDef((i = data.hook)) && isDef((i = i.update))) i(oldVnode, vnode)
@@ -642,6 +644,7 @@ export function createPatchFunction(backend) {
     if (isUndef(vnode.text)) {
       if (isDef(oldCh) && isDef(ch)) {
         if (oldCh !== ch)
+        // 对比新旧子虚拟dom ，并更新
           updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
       } else if (isDef(ch)) {
         if (__DEV__) {
