@@ -246,7 +246,7 @@ export function defineReactive(
       }
     }
   })
-  log("#BA68C8","observer/index.ts var(dep):",dep)
+  // log("#BA68C8","observer/index.ts var(dep):",dep)
   return dep
 }
 

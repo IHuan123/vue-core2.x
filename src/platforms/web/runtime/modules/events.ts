@@ -29,7 +29,7 @@ function normalizeEvents(on) {
     delete on[CHECKBOX_RADIO_TOKEN]
   }
 }
-
+// 当前事件绑定的dom
 let target: any
 
 function createOnceHandler(event, handler, capture) {

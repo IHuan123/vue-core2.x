@@ -12,6 +12,7 @@ type CacheEntry = {
 
 type CacheEntryMap = Record<string, CacheEntry | null>
 
+// 获取组件name，如果不存在组件的name属性，就使用tag标签
 function getComponentName(opts?: VNodeComponentOptions): string | null {
   return opts && (opts.Ctor.options.name || opts.tag)
 }
@@ -70,12 +71,13 @@ export default {
   abstract: true,
 
   props: {
-    include: patternTypes,
-    exclude: patternTypes,
-    max: [String, Number]
+    include: patternTypes, //缓存包含组件
+    exclude: patternTypes, //缓存不包含组件
+    max: [String, Number] //最大缓存组件数量
   },
 
   methods: {
+    // 缓存虚拟dom
     cacheVNode() {
       const { cache, keys, vnodeToCache, keyToCache } = this
       if (vnodeToCache) {
@@ -96,11 +98,13 @@ export default {
   },
 
   created() {
+    // 在 keep-alive 的创建阶段： created钩子会创建一个cache对象，用来保存vnode节点。
     this.cache = Object.create(null)
     this.keys = []
   },
 
   destroyed() {
+    // 在销毁阶段：destroyed 钩子则会调用pruneCacheEntry方法清除cache缓存中的所有组件实例。
     for (const key in this.cache) {
       pruneCacheEntry(this.cache, key, this.keys)
     }
@@ -114,6 +118,7 @@ export default {
     this.$watch('exclude', val => {
       pruneCache(this, name => !matches(val, name))
     })
+    console.log("this is keep-alive===============================mounted")
   },
 
   updated() {

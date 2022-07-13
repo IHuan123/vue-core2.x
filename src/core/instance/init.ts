@@ -17,7 +17,7 @@ export function initMixin(Vue: typeof Component) {
   //在initMinxin里面定义Vue的原型方法_init
   Vue.prototype._init = function (options?: Record<string, any>) {
     const vm: Component = this
-    // a uid
+    // a uid //同一个项目中，每次vue实例化的uid都不同，唯一标记
     vm._uid = uid++
 
     let startTag, endTag
@@ -32,7 +32,7 @@ export function initMixin(Vue: typeof Component) {
     // check
     // 如果是Vue的实例，则不需要被observe
     vm._isVue = true
-    // avoid instances from being observed
+    // avoid instances from being observed 避免实例被观察
     vm.__v_skip = true
     // effect scope
     vm._scope = new EffectScope(true /* detached */)
@@ -78,8 +78,10 @@ export function initMixin(Vue: typeof Component) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
     log("#FF5722","init.ts method(initMixin)>variable(vm):",vm)
+
     //最终挂载方法 render & mount
     if (vm.$options.el) {
+      log("#FF5722","init.ts method(vm.$mount)====================================")
       vm.$mount(vm.$options.el)
     }
   }

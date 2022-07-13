@@ -13,7 +13,6 @@ import { makeMap, no } from 'shared/util'
 import { isNonPhrasingTag } from 'web/compiler/util'
 import { unicodeRegExp } from 'core/util/lang'
 import { ASTAttr, CompilerOptions } from 'types/compiler'
-import { log } from '../../core/util/debug'
 // Regular Expressions for parsing tags and attributes 
 // 用于解析标签和属性的正则表达式
 const attribute =
@@ -85,7 +84,6 @@ export function parseHTML(html, options: HTMLParserOptions) {
     // 确保我们不在像script/style这样的纯文本内容元素中
     if (!lastTag || !isPlainTextElement(lastTag)) {
       let textEnd = html.indexOf('<')
-      log("#F06292", "/compiler/parser/html-parser.ts html解析,var(textEnd)",textEnd)
       // 如何当前索引为0，肯定是一个标签（开始/结束标签）
       if (textEnd === 0) {
         // Comment:

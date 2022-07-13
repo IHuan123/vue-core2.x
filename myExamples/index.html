@@ -20,23 +20,75 @@
         </li>
         <button @click="addList">+</button>
       </ul>
+      <!-- <h1>父子组件生命周期执行顺序</h1>
+      <button @click="show=!show">show/hide</button>
+      <parent-component v-if="show"></parent-component> -->
+      <button @click="showCom='ParentComponent'">ParentComponent</button>
+      <button @click="showCom='TestComponent'">TestComponent</button>
+      <keep-alive>
+        <component v-bind:is="showCom"></component>
+      </keep-alive>
     </div>
   </body>
   <script>
     // 可以在new Vue中直接写el，或者new Vue().$mount(id)
-    var ComponentA = {
-      template: "<i @click='f'>custom Component</i>",
-      data(){
-        return { test:"name" }
+
+    const ChildComponent = {
+      template: `<div style="width:100px;height:50px;background:green">
+        <p>child component{{test}}</p>
+        <button @click="count++">count change</button>
+        <p>msg:{{msg}}{{count}}</p>
+        </div>`,
+      props:{
+        msg:{
+          type:String,
+        }
       },
+      data(){return {test:"child",count:10}},
       methods: {
         f() {
-          this.$emit('test')
+          // this.$emit('test')
           // events.$emit("testEvent")
+          console.log("function name f")
         }
-      }
+      },
+      // beforeCreate(){console.log("hooks--------------->component beforeCreate")},
+      // created(){console.log("chooks--------------->component created")},
+      // beforeMount(){console.log("hooks--------------->component beforeMount")},
+      // mounted(){console.log("hooks--------------->component mounted")},
+      // beforeUpdate(){console.log("hooks--------------->component beforeUpdate")},
+      // updated(){console.log("hooks--------------->component updated")},
+      // beforeDestroy(){console.log("hooks--------------->component beforeDestroy")},
+      // destroyed(){console.log("hooks--------------->component destroyed")},
     }
-
+    const ParentComponent = {
+      components:{ChildComponent},
+      name:"ParentComponent",
+      template: `
+      <div style="width:200px;height:80px;background:red">
+        <p>parent component{{test}}</p>
+        <button @click="msg='test'">change component prop</button>
+        <child-component  :msg="msg"/>
+        </div>`,
+      data(){return { msg:"child prop msg",test:"parent" }},
+      // beforeCreate(){console.log("hooks--------------->parent beforeCreate")},
+      // created(){console.log("hooks--------------->parent created")},
+      // beforeMount(){console.log("hooks--------------->parent beforeMount")},
+      // mounted(){console.log("hooks--------------->parent mounted")},
+      // beforeUpdate(){console.log("hooks--------------->parent beforeUpdate")},
+      // updated(){console.log("hooks--------------->parent updated")},
+      // beforeDestroy(){console.log("hooks--------------->parent beforeDestroy")},
+      // destroyed(){console.log("hooks--------------->parent destroyed")},
+    }
+    const TestComponent = {
+      name:"TestComponent",
+      template: `
+      <div style="width:200px;height:80px;background:#fff">
+        <p>test component</p>
+        </div>`,
+    }
+    //keep-live
+    
 
     var tMixin = {
       mounted() {
@@ -45,7 +97,7 @@
     }
     const vm = new Vue({
       el: document.getElementById('root'),
-      components: { 'component-a': ComponentA },
+      components:{ParentComponent,TestComponent,},
       // mixins:[tMixin],
       // props:{
       //   message:{
@@ -63,18 +115,24 @@
           { value: 3, key: 3 },
           { value: 4, key: 4 }
         ],
-        obj:{name:"ob test"}
+        obj:{name:"ob test"},
+        show:true,
+        msg:"1243",
+        test:"test",
+        showCom:"ParentComponent"
       },
       computed: {
         // message(){
         //   return "this is computed message"
         // }
-        msg(){
-          return "this is computed message"
-        }
+        // msg(){
+        //   return "this is computed message"
+        // }
       },
-      mounted() {
-        console.log('####################### mounted')
+      mounted(){
+        this.$watch('list',newVal=>{
+          console.log("newVal",newVal)
+        })
       },
       methods: {
         add() {
@@ -100,7 +158,7 @@
         }
       }
     })
-    console.log(vm)
+    console.log("vm=========>",vm)
     // .$mount("#root")
     //通过模版生成的render
     // function anonymous() {

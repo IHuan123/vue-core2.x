@@ -101,7 +101,7 @@ if (__DEV__) {
   }
 }
 export function log(color: string = "#78909C", msg?: string, ...args: any[]) {
-  if (__DEV__) {
+  if (__DEV__&&false) {
     if (msg) {
       console.log(`%c${msg}`, `color:#ffffff;background:${color};padding:2px;border-radius:2px`, ...args)
     } else if (args.length > 0) {

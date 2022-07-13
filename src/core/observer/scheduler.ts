@@ -188,7 +188,6 @@ export function queueWatcher(watcher: Watcher) {
       flushSchedulerQueue()
       return
     }
-    console.log("++++++++++++++++++++++++++++++++++++++++++++ queueWatcher")
     nextTick(flushSchedulerQueue)
   }
 }

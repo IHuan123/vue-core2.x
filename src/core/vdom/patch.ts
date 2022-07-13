@@ -77,7 +77,7 @@ export function createPatchFunction(backend) {
       }
     }
   }
-
+  console.log("--------------------->patch: cbs",cbs)
   function emptyNodeAt(elm) {
     return new VNode(nodeOps.tagName(elm).toLowerCase(), {}, [], undefined, elm)
   }
@@ -169,6 +169,7 @@ export function createPatchFunction(backend) {
       setScope(vnode)
 
       createChildren(vnode, children, insertedVnodeQueue)
+      // 处理元素上的属性
       if (isDef(data)) {
         invokeCreateHooks(vnode, insertedVnodeQueue)
       }

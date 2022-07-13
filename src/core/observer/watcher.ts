@@ -83,7 +83,7 @@ export default class Watcher implements DepTarget {
       this.user = !!options.user
       this.lazy = !!options.lazy
       this.sync = !!options.sync
-      this.before = options.before //beforeUpdate调用
+      this.before = options.before //beforeUpdate生命钩子函数调用
       if (__DEV__) {
         this.onTrack = options.onTrack
         this.onTrigger = options.onTrigger
@@ -195,7 +195,6 @@ export default class Watcher implements DepTarget {
    * * 订阅者界面。 * 将在依赖项更改时调用。
    */
   update() {
-    console.log("66666666666666666666666666666666666666666666666666666666666666 watcher.update执行")
     /* istanbul ignore else */
     if (this.lazy) { // 懒加载
       this.dirty = true

@@ -13,8 +13,8 @@ export const LIFECYCLE_HOOKS = [
   'updated',
   'beforeDestroy',
   'destroyed',
-  'activated',
-  'deactivated',
-  'errorCaptured',
-  'serverPrefetch'
+  'activated', // keep-live特有
+  'deactivated', // keep-live特有
+  'errorCaptured', // 全局生命函数
+  'serverPrefetch' // 全局生命函数
 ] as const
