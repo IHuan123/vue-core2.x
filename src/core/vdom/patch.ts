@@ -44,7 +44,7 @@ function sameVnode(a, b) {
       (isTrue(a.isAsyncPlaceholder) && isUndef(b.asyncFactory.error)))
   )
 }
-// 如果是表单 比对两个表单是否相同
+// 如果是input标签 比对两个表单是否相同
 function sameInputType(a, b) {
   if (a.tag !== 'input') return true
   let i
@@ -77,7 +77,7 @@ export function createPatchFunction(backend) {
       }
     }
   }
-  console.log("--------------------->patch: cbs",cbs)
+  console.log("--------------------->patch: cbs", cbs)
   function emptyNodeAt(elm) {
     return new VNode(nodeOps.tagName(elm).toLowerCase(), {}, [], undefined, elm)
   }
@@ -154,10 +154,10 @@ export function createPatchFunction(backend) {
         if (isUnknownElement(vnode, creatingElmInVPre)) {
           warn(
             'Unknown custom element: <' +
-              tag +
-              '> - did you ' +
-              'register the component correctly? For recursive components, ' +
-              'make sure to provide the "name" option.',
+            tag +
+            '> - did you ' +
+            'register the component correctly? For recursive components, ' +
+            'make sure to provide the "name" option.',
             vnode.context
           )
         }
@@ -497,6 +497,9 @@ export function createPatchFunction(backend) {
         oldEndVnode = oldCh[--oldEndIdx]
         newStartVnode = newCh[++newStartIdx]
       } else {
+        // oldCh 是一个旧虚拟节点数组
+        // oldKeyToIdx map映射对象
+        // idxInOld 对比后得到旧节点下标
         if (isUndef(oldKeyToIdx))
           oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx)
         idxInOld = isDef(newStartVnode.key)
@@ -645,7 +648,7 @@ export function createPatchFunction(backend) {
     if (isUndef(vnode.text)) {
       if (isDef(oldCh) && isDef(ch)) {
         if (oldCh !== ch)
-        // 对比新旧子虚拟dom ，并更新
+          // 对比新旧子虚拟dom ，并更新
           updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
       } else if (isDef(ch)) {
         if (__DEV__) {
@@ -800,7 +803,7 @@ export function createPatchFunction(backend) {
         vnode.tag.indexOf('vue-component') === 0 ||
         (!isUnknownElement(vnode, inVPre) &&
           vnode.tag.toLowerCase() ===
-            (node.tagName && node.tagName.toLowerCase()))
+          (node.tagName && node.tagName.toLowerCase()))
       )
     } else {
       return node.nodeType === (vnode.isComment ? 8 : 3)
@@ -846,10 +849,10 @@ export function createPatchFunction(backend) {
             } else if (__DEV__) {
               warn(
                 'The client-side rendered virtual DOM tree is not matching ' +
-                  'server-rendered content. This is likely caused by incorrect ' +
-                  'HTML markup, for example nesting block-level elements inside ' +
-                  '<p>, or missing <tbody>. Bailing hydration and performing ' +
-                  'full client-side render.'
+                'server-rendered content. This is likely caused by incorrect ' +
+                'HTML markup, for example nesting block-level elements inside ' +
+                '<p>, or missing <tbody>. Bailing hydration and performing ' +
+                'full client-side render.'
               )
             }
           }
@@ -917,7 +920,7 @@ export function createPatchFunction(backend) {
         }
       }
     }
-  // 执行 虚拟 dom 的 insert 钩子函数
+    // 执行 虚拟 dom 的 insert 钩子函数
     invokeInsertHook(vnode, insertedVnodeQueue, isInitialPatch)
     // 返回最新 vnode 的 elm ，也就是真实的 dom节点
     return vnode.elm

@@ -66,7 +66,7 @@ export function initGlobalAPI(Vue: GlobalAPI) {
   // builtInComponents: keep-alive组件
   extend(Vue.options.components, builtInComponents)
 
-  // Vue.use
+  // Vue.use 注册插件
   initUse(Vue)
   // Vue.mixin
   initMixin(Vue)

@@ -9,6 +9,7 @@ import {
 } from '../util/index'
 import { updateListeners } from '../vdom/helpers/index'
 
+// 初始化事件
 export function initEvents(vm: Component) {
   vm._events = Object.create(null)
   vm._hasHookEvent = false
